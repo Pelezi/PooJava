@@ -1,9 +1,9 @@
-package com.unievent.unieventapi.services;
+package com.uvas.uvasapi.services;
 
-import com.unievent.unieventapi.domain.Event;
-import com.unievent.unieventapi.exceptions.BusinessException;
-import com.unievent.unieventapi.exceptions.NotFoundException;
-import com.unievent.unieventapi.repositories.EventRepository;
+import com.uvas.uvasapi.domain.Event;
+import com.uvas.uvasapi.exceptions.BusinessException;
+import com.uvas.uvasapi.exceptions.NotFoundException;
+import com.uvas.uvasapi.repositories.EventRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

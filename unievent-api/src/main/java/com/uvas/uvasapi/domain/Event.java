@@ -1,4 +1,4 @@
-package com.unievent.unieventapi.domain;
+package com.uvas.uvasapi.domain;
 
 import jakarta.persistence.*;
 import lombok.Data;

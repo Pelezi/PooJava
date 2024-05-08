@@ -1,8 +1,8 @@
-package com.unievent.unieventapi.controllers;
+package com.uvas.uvasapi.controllers;
 
-import com.unievent.unieventapi.controllers.dtos.EventCreateOrUpdateDTO;
-import com.unievent.unieventapi.domain.Event;
-import com.unievent.unieventapi.services.EventService;
+import com.uvas.uvasapi.controllers.dtos.EventCreateOrUpdateDTO;
+import com.uvas.uvasapi.domain.Event;
+import com.uvas.uvasapi.services.EventService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

@@ -1,4 +1,4 @@
-package com.unievent.unieventapi.controllers.dtos;
+package com.uvas.uvasapi.controllers.dtos;
 
 import java.util.ArrayList;
 import java.util.List;

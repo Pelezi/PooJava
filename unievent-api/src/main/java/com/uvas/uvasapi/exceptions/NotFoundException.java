@@ -1,4 +1,4 @@
-package com.unievent.unieventapi.exceptions;
+package com.uvas.uvasapi.exceptions;
 
 public class NotFoundException extends RuntimeException {
 

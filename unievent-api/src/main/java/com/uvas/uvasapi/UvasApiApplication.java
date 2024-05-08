@@ -1,13 +1,13 @@
-package com.unievent.unieventapi;
+package com.uvas.uvasapi;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class UnieventApiApplication {
+public class UvasApiApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(UnieventApiApplication.class, args);
+		SpringApplication.run(UvasApiApplication.class, args);
 	}
 
 }

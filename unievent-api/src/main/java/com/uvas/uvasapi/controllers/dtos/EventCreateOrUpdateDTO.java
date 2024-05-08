@@ -1,7 +1,6 @@
-package com.unievent.unieventapi.controllers.dtos;
+package com.uvas.uvasapi.controllers.dtos;
 
-import com.unievent.unieventapi.domain.Event;
-import com.unievent.unieventapi.services.EventService;
+import com.uvas.uvasapi.domain.Event;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;

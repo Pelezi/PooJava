@@ -1,4 +1,4 @@
-package com.unievent.unieventapi.controllers.dtos;
+package com.uvas.uvasapi.controllers.dtos;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

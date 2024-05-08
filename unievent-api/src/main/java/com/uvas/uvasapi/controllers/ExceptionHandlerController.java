@@ -1,9 +1,9 @@
-package com.unievent.unieventapi.controllers;
+package com.uvas.uvasapi.controllers;
 
-import com.unievent.unieventapi.controllers.dtos.StandardErrorDTO;
-import com.unievent.unieventapi.controllers.dtos.ValidationErrorDTO;
-import com.unievent.unieventapi.exceptions.BusinessException;
-import com.unievent.unieventapi.exceptions.NotFoundException;
+import com.uvas.uvasapi.controllers.dtos.StandardErrorDTO;
+import com.uvas.uvasapi.controllers.dtos.ValidationErrorDTO;
+import com.uvas.uvasapi.exceptions.BusinessException;
+import com.uvas.uvasapi.exceptions.NotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
