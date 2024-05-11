@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.Data;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Entity
 @Table(name = "pessoa")
@@ -29,6 +30,16 @@ public class Pessoa {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Cargo cargo;
+
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinColumn(name = "endereco_id")
+    private Endereco enderecoId;
+
+    @OneToMany(mappedBy = "pessoaId", cascade = CascadeType.ALL)
+    private List<Phone> phoneId;
+
+    @OneToMany(mappedBy = "pessoaId", cascade = CascadeType.ALL)
+    private List<Email> emailId;
 
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDate createdAt;

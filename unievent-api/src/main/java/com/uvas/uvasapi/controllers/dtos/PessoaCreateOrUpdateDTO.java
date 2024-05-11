@@ -1,5 +1,6 @@
 package com.uvas.uvasapi.controllers.dtos;
 
+import com.uvas.uvasapi.domain.Endereco;
 import com.uvas.uvasapi.domain.Pessoa;
 import com.uvas.uvasapi.domain.enums.Cargo;
 import jakarta.validation.constraints.NotBlank;
@@ -25,6 +26,8 @@ public class PessoaCreateOrUpdateDTO {
     @NotNull(message = "Cargo da pessoa não informado")
     private Cargo cargo;
 
+    private Endereco enderecoId;
+
     public Pessoa getPessoa(){
         Pessoa pessoa = new Pessoa();
 
@@ -32,6 +35,7 @@ public class PessoaCreateOrUpdateDTO {
         pessoa.setDataNascimento(dataNascimento);
         pessoa.setDataBatismo(dataBatismo);
         pessoa.setCargo(cargo);
+        pessoa.setEnderecoId(enderecoId);
 
         return pessoa;
     }
