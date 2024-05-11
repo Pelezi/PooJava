@@ -25,9 +25,9 @@ public class Grupo {
     private LocalDateTime dataInauguracao;
     
     @ManyToOne
-    @JoinColumn(name = "lider_id")
+    @JoinColumn(name = "diretor_id")
     @JsonBackReference
-    private Lider diretorId;
+    private Diretor diretorId;
 
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(
