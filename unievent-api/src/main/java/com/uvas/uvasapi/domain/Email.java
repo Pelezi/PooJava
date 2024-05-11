@@ -6,7 +6,7 @@ import com.uvas.uvasapi.domain.enums.PhoneType;
 import jakarta.persistence.*;
 import lombok.Data;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
  @Entity
  @Table(name = "email")
@@ -30,18 +30,18 @@ import java.time.LocalDate;
      private Pessoa pessoaId;
 
      @Column(name = "created_at", nullable = false, updatable = false)
-     private LocalDate createdAt;
+     private LocalDateTime createdAt;
 
      @Column(name = "updated_at", nullable = false)
-     private LocalDate updatedAt;
+     private LocalDateTime updatedAt;
 
      @PrePersist
      public void prePersist() {
-         createdAt = updatedAt = LocalDate.now();
+         createdAt = updatedAt = LocalDateTime.now();
      }
 
      @PreUpdate
      public void preUpdate() {
-         updatedAt = LocalDate.now();
+         updatedAt = LocalDateTime.now();
      }
  }

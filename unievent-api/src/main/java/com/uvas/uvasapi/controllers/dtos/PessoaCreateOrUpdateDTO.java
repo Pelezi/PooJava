@@ -9,7 +9,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.Length;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
@@ -20,9 +20,9 @@ public class PessoaCreateOrUpdateDTO {
     @Length(max = 200, message = "Nome da pessoa não pode exceder 200 caracteres")
     private String nome;
 
-    private LocalDate dataNascimento;
+    private LocalDateTime dataNascimento;
 
-    private LocalDate dataBatismo;
+    private LocalDateTime dataBatismo;
 
     @NotNull(message = "Cargo da pessoa não informado")
     private Cargo cargo;

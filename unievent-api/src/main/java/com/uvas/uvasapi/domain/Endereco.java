@@ -4,7 +4,7 @@ import com.uvas.uvasapi.domain.enums.AddressType;
 import jakarta.persistence.*;
 import lombok.Data;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "endereco")
@@ -29,18 +29,18 @@ public class Endereco {
     private String bairro;
 
     @Column(name = "created_at", nullable = false, updatable = false)
-    private LocalDate createdAt;
+    private LocalDateTime createdAt;
 
     @Column(name = "updated_at", nullable = false)
-    private LocalDate updatedAt;
+    private LocalDateTime updatedAt;
 
     @PrePersist
     public void prePersist() {
-        createdAt = updatedAt = LocalDate.now();
+        createdAt = updatedAt = LocalDateTime.now();
     }
 
     @PreUpdate
     public void preUpdate() {
-        updatedAt = LocalDate.now();
+        updatedAt = LocalDateTime.now();
     }
 }

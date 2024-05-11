@@ -2,7 +2,6 @@ package com.uvas.uvasapi.domain;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.uvas.uvasapi.domain.enums.Cargo;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -10,9 +9,9 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
-@Table(name = "pessoa")
+@Table(name = "celulas")
 @Data
-public class Pessoa {
+public class Celula {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -22,37 +21,26 @@ public class Pessoa {
     private String nome;
 
     @Temporal(TemporalType.DATE)
-    @Column(name = "data_nascimento")
-    private LocalDateTime dataNascimento;
+    @Column(name = "data_inauguracao")
+    private LocalDateTime dataInauguracao;
+    
+    @ManyToOne
+    @JoinColumn(name = "discipulador_id")
+    @JsonBackReference
+    private Discipulador discipuladorId;
+    
+    @ManyToOne
+    @JoinColumn(name = "lider_id")
+    @JsonBackReference
+    private Lider liderId;
 
-    @Temporal(TemporalType.DATE)
-    @Column(name = "data_batismo")
-    private LocalDateTime dataBatismo;
-
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private Cargo cargo;
+    @OneToMany(mappedBy = "celulaId", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JsonManagedReference
+    private List<Pessoa> pessoas;
 
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "endereco_id")
     private Endereco enderecoId;
-
-    @OneToMany(mappedBy = "pessoaId", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JsonManagedReference
-    private List<Phone> phones;
-
-    @OneToMany(mappedBy = "pessoaId", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JsonManagedReference
-    private List<Email> emails;
-
-    @ManyToOne
-    @JoinColumn(name = "celula_id")
-    @JsonBackReference
-    private Celula celulaId;
-
-    @ManyToMany(mappedBy = "integrantes")
-    @JsonBackReference
-    private List<Grupo> grupos;
 
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
