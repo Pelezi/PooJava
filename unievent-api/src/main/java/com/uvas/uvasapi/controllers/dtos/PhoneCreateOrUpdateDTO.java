@@ -1,5 +1,6 @@
 package com.uvas.uvasapi.controllers.dtos;
 
+import com.uvas.uvasapi.domain.Pessoa;
 import com.uvas.uvasapi.domain.Phone;
 import com.uvas.uvasapi.domain.enums.PhoneType;
 import jakarta.validation.constraints.NotBlank;
@@ -19,11 +20,15 @@ public class PhoneCreateOrUpdateDTO {
     @NotNull(message = "Tipo de número não informado")
     private PhoneType phoneType;
 
+    @NotNull(message = "Pessoa não informada")
+    private Pessoa pessoaId;
+
     public Phone getPhone(){
         Phone phone = new Phone();
 
         phone.setNumero(numero);
         phone.setPhoneType(phoneType);
+        phone.setPessoaId(pessoaId);
 
         return phone;
     }
