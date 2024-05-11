@@ -1,5 +1,6 @@
  package com.uvas.uvasapi.domain;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.uvas.uvasapi.domain.enums.PhoneType;
 import jakarta.persistence.*;
 import lombok.Data;
@@ -24,6 +25,7 @@ public class Phone {
 
     @ManyToOne
     @JoinColumn(name = "pessoa_id")
+    @JsonBackReference
     private Pessoa pessoaId;
 
     @Column(name = "created_at", nullable = false, updatable = false)
@@ -31,9 +33,6 @@ public class Phone {
 
     @Column(name = "updated_at", nullable = false)
     private LocalDate updatedAt;
-
-    @Column(name = "deleted_at")
-    private LocalDate deletedAt;
 
     @PrePersist
     public void prePersist() {

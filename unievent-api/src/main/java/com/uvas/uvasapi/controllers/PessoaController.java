@@ -1,8 +1,14 @@
 package com.uvas.uvasapi.controllers;
 
+import com.uvas.uvasapi.controllers.dtos.EmailCreateOrUpdateDTO;
 import com.uvas.uvasapi.controllers.dtos.PessoaCreateOrUpdateDTO;
+import com.uvas.uvasapi.controllers.dtos.PhoneCreateOrUpdateDTO;
+import com.uvas.uvasapi.domain.Email;
 import com.uvas.uvasapi.domain.Pessoa;
+import com.uvas.uvasapi.domain.Phone;
+import com.uvas.uvasapi.services.EmailService;
 import com.uvas.uvasapi.services.PessoaService;
+import com.uvas.uvasapi.services.PhoneService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +23,10 @@ public class PessoaController {
 
     @Autowired
     private PessoaService pessoaService;
+    @Autowired
+    private PhoneService phoneService;
+    @Autowired
+    private EmailService emailService;
 
     @GetMapping
     public ResponseEntity<List<Pessoa>> getPessoas(){
@@ -29,6 +39,20 @@ public class PessoaController {
     public ResponseEntity<Pessoa> createPessoa(@RequestBody @Valid PessoaCreateOrUpdateDTO dto){
         Pessoa pessoa = pessoaService.createPessoa(dto.getPessoa());
 
+        if (dto.getPhones() != null) {
+            for (PhoneCreateOrUpdateDTO phoneDto : dto.getPhones()) {
+                Phone phone = phoneDto.getPhone();
+                phone.setPessoaId(pessoa);
+                phoneService.createPhone(phone);
+            }
+        }
+        if (dto.getEmails() != null) {
+            for (EmailCreateOrUpdateDTO emailDto : dto.getEmails()) {
+                Email email = emailDto.getEmail();
+                email.setPessoaId(pessoa);
+                emailService.createEmail(email);
+            }
+        }
         return ResponseEntity.status(201).body(pessoa);
     }
 

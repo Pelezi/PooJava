@@ -1,5 +1,6 @@
 package com.uvas.uvasapi.domain;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.uvas.uvasapi.domain.enums.Cargo;
 import jakarta.persistence.*;
 import lombok.Data;
@@ -35,20 +36,19 @@ public class Pessoa {
     @JoinColumn(name = "endereco_id")
     private Endereco enderecoId;
 
-    @OneToMany(mappedBy = "pessoaId", cascade = CascadeType.ALL)
-    private List<Phone> phoneId;
+    @OneToMany(mappedBy = "pessoaId", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JsonManagedReference
+    private List<Phone> phones;
 
-    @OneToMany(mappedBy = "pessoaId", cascade = CascadeType.ALL)
-    private List<Email> emailId;
+    @OneToMany(mappedBy = "pessoaId", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JsonManagedReference
+    private List<Email> emails;
 
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDate createdAt;
 
     @Column(name = "updated_at", nullable = false)
     private LocalDate updatedAt;
-
-    @Column(name = "deleted_at")
-    private LocalDate deletedAt;
 
     @PrePersist
     public void prePersist() {

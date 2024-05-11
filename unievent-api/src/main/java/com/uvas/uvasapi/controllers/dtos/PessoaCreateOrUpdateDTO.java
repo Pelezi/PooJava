@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.Length;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -28,6 +29,10 @@ public class PessoaCreateOrUpdateDTO {
 
     private Endereco enderecoId;
 
+    private List<PhoneCreateOrUpdateDTO> phones;
+
+    private List<EmailCreateOrUpdateDTO> emails;
+
     public Pessoa getPessoa(){
         Pessoa pessoa = new Pessoa();
 
@@ -36,6 +41,8 @@ public class PessoaCreateOrUpdateDTO {
         pessoa.setDataBatismo(dataBatismo);
         pessoa.setCargo(cargo);
         pessoa.setEnderecoId(enderecoId);
+        pessoa.setPhones(phones.stream().map(PhoneCreateOrUpdateDTO::getPhone).toList());
+        pessoa.setEmails(emails.stream().map(EmailCreateOrUpdateDTO::getEmail).toList());
 
         return pessoa;
     }

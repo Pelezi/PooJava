@@ -34,9 +34,6 @@ public class Endereco {
     @Column(name = "updated_at", nullable = false)
     private LocalDate updatedAt;
 
-    @Column(name = "deleted_at")
-    private LocalDate deletedAt;
-
     @PrePersist
     public void prePersist() {
         createdAt = updatedAt = LocalDate.now();
