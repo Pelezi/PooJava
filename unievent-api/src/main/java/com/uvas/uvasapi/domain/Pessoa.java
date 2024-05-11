@@ -47,6 +47,7 @@ public class Pessoa {
 
     @ManyToOne
     @JoinColumn(name = "celula_id")
+    @Column(nullable = false)
     @JsonBackReference
     private Celula celulaId;
 

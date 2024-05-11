@@ -1,6 +1,8 @@
 package com.uvas.uvasapi.controllers.dtos;
 
+import com.uvas.uvasapi.domain.Celula;
 import com.uvas.uvasapi.domain.Endereco;
+import com.uvas.uvasapi.domain.Grupo;
 import com.uvas.uvasapi.domain.Pessoa;
 import com.uvas.uvasapi.domain.enums.Cargo;
 import jakarta.validation.constraints.NotBlank;
@@ -33,6 +35,10 @@ public class PessoaCreateOrUpdateDTO {
 
     private List<EmailCreateOrUpdateDTO> emails;
 
+    private Celula celulaId;
+
+    private List<Grupo> grupos;
+
     public Pessoa getPessoa(){
         Pessoa pessoa = new Pessoa();
 
@@ -43,6 +49,8 @@ public class PessoaCreateOrUpdateDTO {
         pessoa.setEnderecoId(enderecoId);
         pessoa.setPhones(phones.stream().map(PhoneCreateOrUpdateDTO::getPhone).toList());
         pessoa.setEmails(emails.stream().map(EmailCreateOrUpdateDTO::getEmail).toList());
+        pessoa.setCelulaId(celulaId);
+        pessoa.setGrupos(grupos);
 
         return pessoa;
     }
