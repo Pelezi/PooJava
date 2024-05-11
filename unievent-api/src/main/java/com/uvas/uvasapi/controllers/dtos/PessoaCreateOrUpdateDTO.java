@@ -35,6 +35,7 @@ public class PessoaCreateOrUpdateDTO {
 
     private List<EmailCreateOrUpdateDTO> emails;
 
+    @NotNull(message = "Célula da pessoa não informada")
     private Celula celulaId;
 
     private List<Grupo> grupos;

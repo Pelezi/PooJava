@@ -46,8 +46,7 @@ public class Pessoa {
     private List<Email> emails;
 
     @ManyToOne
-    @JoinColumn(name = "celula_id")
-    @Column(nullable = false)
+    @JoinColumn(name = "celula_id", nullable = false)
     @JsonBackReference
     private Celula celulaId;
 
