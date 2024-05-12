@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Data;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.List;
 
 @Entity
@@ -22,7 +22,7 @@ public class Grupo {
 
     @Temporal(TemporalType.DATE)
     @Column(name = "data_inauguracao")
-    private LocalDateTime dataInauguracao;
+    private LocalDate dataInauguracao;
     
     @ManyToOne
     @JoinColumn(name = "diretor_id")
@@ -43,18 +43,18 @@ public class Grupo {
     private Endereco enderecoId;
 
     @Column(name = "created_at", nullable = false, updatable = false)
-    private LocalDateTime createdAt;
+    private LocalDate createdAt;
 
     @Column(name = "updated_at", nullable = false)
-    private LocalDateTime updatedAt;
+    private LocalDate updatedAt;
 
     @PrePersist
     public void prePersist() {
-        createdAt = updatedAt = LocalDateTime.now();
+        createdAt = updatedAt = LocalDate.now();
     }
 
     @PreUpdate
     public void preUpdate() {
-        updatedAt = LocalDateTime.now();
+        updatedAt = LocalDate.now();
     }
 }

@@ -6,7 +6,7 @@ import com.uvas.uvasapi.domain.enums.Cargo;
 import jakarta.persistence.*;
 import lombok.Data;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.List;
 
 @Entity
@@ -23,11 +23,11 @@ public class Pessoa {
 
     @Temporal(TemporalType.DATE)
     @Column(name = "data_nascimento")
-    private LocalDateTime dataNascimento;
+    private LocalDate dataNascimento;
 
     @Temporal(TemporalType.DATE)
     @Column(name = "data_batismo")
-    private LocalDateTime dataBatismo;
+    private LocalDate dataBatismo;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
@@ -46,7 +46,7 @@ public class Pessoa {
     private List<Email> emails;
 
     @ManyToOne
-    @JoinColumn(name = "celula_id", nullable = false)
+    @JoinColumn(name = "celula_id")
     @JsonBackReference
     private Celula celulaId;
 
@@ -55,18 +55,18 @@ public class Pessoa {
     private List<Grupo> grupos;
 
     @Column(name = "created_at", nullable = false, updatable = false)
-    private LocalDateTime createdAt;
+    private LocalDate createdAt;
 
     @Column(name = "updated_at", nullable = false)
-    private LocalDateTime updatedAt;
+    private LocalDate updatedAt;
 
     @PrePersist
     public void prePersist() {
-        createdAt = updatedAt = LocalDateTime.now();
+        createdAt = updatedAt = LocalDate.now();
     }
 
     @PreUpdate
     public void preUpdate() {
-        updatedAt = LocalDateTime.now();
+        updatedAt = LocalDate.now();
     }
 }
