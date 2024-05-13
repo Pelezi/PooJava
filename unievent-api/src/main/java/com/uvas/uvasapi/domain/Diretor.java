@@ -21,7 +21,7 @@ public class Diretor {
     private Pessoa pessoaId;
     
     @OneToMany(mappedBy = "diretorId", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JsonManagedReference
+    @JsonManagedReference(value = "diretor-grupo")
     private List<Grupo> grupos;
     
     @Column(name = "created_at", nullable = false, updatable = false)

@@ -26,16 +26,16 @@ public class Celula {
     
     @ManyToOne
     @JoinColumn(name = "discipulador_id")
-    @JsonBackReference
+    @JsonBackReference(value = "discipulador-celulas")
     private Discipulador discipuladorId;
     
     @ManyToOne
     @JoinColumn(name = "lider_id")
-    @JsonBackReference
+    @JsonBackReference(value = "lider-celulas")
     private Lider liderId;
 
     @OneToMany(mappedBy = "celulaId", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JsonManagedReference
+    @JsonManagedReference(value = "celula-integrantes")
     private List<Pessoa> pessoas;
 
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)

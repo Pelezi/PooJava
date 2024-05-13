@@ -2,7 +2,9 @@ package com.uvas.uvasapi.controllers;
 
 import com.uvas.uvasapi.controllers.dtos.GrupoCreateOrUpdateDTO;
 import com.uvas.uvasapi.domain.Grupo;
+import com.uvas.uvasapi.services.DiretorService;
 import com.uvas.uvasapi.services.GrupoService;
+import com.uvas.uvasapi.services.PessoaService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +19,10 @@ public class GrupoController {
 
     @Autowired
     private GrupoService grupoService;
+    @Autowired
+    private DiretorService diretorService;
+    @Autowired
+    private PessoaService pessoaService;
 
     @GetMapping
     public ResponseEntity<List<Grupo>> getGrupos(){
@@ -27,7 +33,7 @@ public class GrupoController {
 
     @PostMapping
     public ResponseEntity<Grupo> createGrupo(@RequestBody @Valid GrupoCreateOrUpdateDTO dto){
-        Grupo grupo = grupoService.createGrupo(dto.getGrupo());
+        Grupo grupo = grupoService.createGrupo(dto.getGrupo(diretorService, pessoaService));
 
         return ResponseEntity.status(201).body(grupo);
     }

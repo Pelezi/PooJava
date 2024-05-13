@@ -1,7 +1,9 @@
 package com.uvas.uvasapi.domain;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.uvas.uvasapi.domain.enums.Cargo;
 import jakarta.persistence.*;
 import lombok.Data;
@@ -12,6 +14,7 @@ import java.util.List;
 @Entity
 @Table(name = "pessoa")
 @Data
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class Pessoa {
 
     @Id
@@ -38,20 +41,19 @@ public class Pessoa {
     private Endereco enderecoId;
 
     @OneToMany(mappedBy = "pessoaId", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JsonManagedReference
+    @JsonManagedReference(value = "pessoa-phones")
     private List<Phone> phones;
 
     @OneToMany(mappedBy = "pessoaId", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JsonManagedReference
+    @JsonManagedReference(value = "pessoa-emails")
     private List<Email> emails;
 
     @ManyToOne
     @JoinColumn(name = "celula_id")
-    @JsonBackReference
+    @JsonBackReference(value = "celula-integrantes")
     private Celula celulaId;
 
     @ManyToMany(mappedBy = "integrantes")
-    @JsonBackReference
     private List<Grupo> grupos;
 
     @Column(name = "created_at", nullable = false, updatable = false)

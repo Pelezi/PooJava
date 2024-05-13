@@ -3,6 +3,8 @@ package com.uvas.uvasapi.controllers;
 import com.uvas.uvasapi.controllers.dtos.DiretorCreateOrUpdateDTO;
 import com.uvas.uvasapi.domain.Diretor;
 import com.uvas.uvasapi.services.DiretorService;
+import com.uvas.uvasapi.services.GrupoService;
+import com.uvas.uvasapi.services.PessoaService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +19,10 @@ public class DiretorController {
 
     @Autowired
     private DiretorService diretorService;
+    @Autowired
+    private PessoaService pessoaService;
+    @Autowired
+    private GrupoService grupoService;
 
     @GetMapping
     public ResponseEntity<List<Diretor>> getDiretores(){
@@ -27,7 +33,7 @@ public class DiretorController {
 
     @PostMapping
     public ResponseEntity<Diretor> createDiretor(@RequestBody @Valid DiretorCreateOrUpdateDTO dto){
-        Diretor diretor = diretorService.createDiretor(dto.getDiretor());
+        Diretor diretor = diretorService.createDiretor(dto.getDiretor(pessoaService, grupoService));
 
         return ResponseEntity.status(201).body(diretor);
     }
@@ -41,7 +47,7 @@ public class DiretorController {
 
     @PutMapping(path = "{id}")
     public ResponseEntity<Diretor> updateDiretor(@PathVariable String id, @RequestBody @Valid DiretorCreateOrUpdateDTO dto){
-        Diretor diretor = dto.getDiretor();
+        Diretor diretor = dto.getDiretor(pessoaService, grupoService);
         diretor.setId(id);
         diretorService.updateDiretor(diretor);
 

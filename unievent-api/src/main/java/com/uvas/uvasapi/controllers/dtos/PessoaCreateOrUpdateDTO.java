@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.Length;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -31,14 +32,13 @@ public class PessoaCreateOrUpdateDTO {
 
     private Endereco enderecoId;
 
-    private List<PhoneCreateOrUpdateDTO> phones;
+    private List<PhoneCreateOrUpdateDTO> phones = new ArrayList<>();
 
-    private List<EmailCreateOrUpdateDTO> emails;
+    private List<EmailCreateOrUpdateDTO> emails = new ArrayList<>();
 
-    @NotNull(message = "Célula da pessoa não informada")
     private Celula celulaId;
 
-    private List<Grupo> grupos;
+    private List<GrupoCreateOrUpdateDTO> grupos = new ArrayList<>();
 
     public Pessoa getPessoa(){
         Pessoa pessoa = new Pessoa();
@@ -48,10 +48,7 @@ public class PessoaCreateOrUpdateDTO {
         pessoa.setDataBatismo(dataBatismo);
         pessoa.setCargo(cargo);
         pessoa.setEnderecoId(enderecoId);
-        pessoa.setPhones(phones.stream().map(PhoneCreateOrUpdateDTO::getPhone).toList());
-        pessoa.setEmails(emails.stream().map(EmailCreateOrUpdateDTO::getEmail).toList());
         pessoa.setCelulaId(celulaId);
-        pessoa.setGrupos(grupos);
 
         return pessoa;
     }

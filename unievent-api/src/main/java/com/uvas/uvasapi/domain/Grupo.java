@@ -1,7 +1,9 @@
 package com.uvas.uvasapi.domain;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -11,6 +13,7 @@ import java.util.List;
 @Entity
 @Table(name = "grupos")
 @Data
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class Grupo {
 
     @Id
@@ -26,16 +29,15 @@ public class Grupo {
     
     @ManyToOne
     @JoinColumn(name = "diretor_id")
-    @JsonBackReference
+    @JsonBackReference(value = "diretor-grupo")
     private Diretor diretorId;
 
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany()
     @JoinTable(
         name = "grupo_pessoa",
         joinColumns = @JoinColumn(name = "grupo_id"),
         inverseJoinColumns = @JoinColumn(name = "pessoa_id")
     )
-    @JsonManagedReference
     private List<Pessoa> integrantes;
 
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)

@@ -21,7 +21,7 @@ public class Lider {
     private Pessoa pessoaId;
     
     @OneToMany(mappedBy = "liderId", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JsonManagedReference
+    @JsonManagedReference(value = "lider-celulas")
     private List<Celula> celulas;
     
     @Column(name = "created_at", nullable = false, updatable = false)

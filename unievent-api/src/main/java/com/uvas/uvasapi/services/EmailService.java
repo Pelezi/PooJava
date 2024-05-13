@@ -33,6 +33,12 @@ public class EmailService {
         return emailExists.orElseThrow(() -> new NotFoundException("Email não encontrado"));
     }
 
+    public Email getEmailByEmail(String email) {
+        Optional<Email> emailExists = emailRepository.findByEmail(email);
+
+        return emailExists.orElseThrow(() -> new NotFoundException("Email não encontrado"));
+    }
+
     @Transactional(rollbackOn = Exception.class)
     public Email updateEmail(Email email) {
 

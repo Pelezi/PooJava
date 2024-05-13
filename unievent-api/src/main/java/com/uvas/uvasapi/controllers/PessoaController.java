@@ -1,12 +1,15 @@
 package com.uvas.uvasapi.controllers;
 
 import com.uvas.uvasapi.controllers.dtos.EmailCreateOrUpdateDTO;
+import com.uvas.uvasapi.controllers.dtos.GrupoCreateOrUpdateDTO;
 import com.uvas.uvasapi.controllers.dtos.PessoaCreateOrUpdateDTO;
 import com.uvas.uvasapi.controllers.dtos.PhoneCreateOrUpdateDTO;
 import com.uvas.uvasapi.domain.Email;
+import com.uvas.uvasapi.domain.Grupo;
 import com.uvas.uvasapi.domain.Pessoa;
 import com.uvas.uvasapi.domain.Phone;
 import com.uvas.uvasapi.services.EmailService;
+import com.uvas.uvasapi.services.GrupoService;
 import com.uvas.uvasapi.services.PessoaService;
 import com.uvas.uvasapi.services.PhoneService;
 import jakarta.validation.Valid;
@@ -27,6 +30,8 @@ public class PessoaController {
     private PhoneService phoneService;
     @Autowired
     private EmailService emailService;
+    @Autowired
+    private GrupoService grupoService;
 
     @GetMapping
     public ResponseEntity<List<Pessoa>> getPessoas(){
@@ -49,8 +54,12 @@ public class PessoaController {
         if (dto.getEmails() != null) {
             for (EmailCreateOrUpdateDTO emailDto : dto.getEmails()) {
                 Email email = emailDto.getEmail();
-                email.setPessoaId(pessoa);
-                emailService.createEmail(email);
+                String emailField = email.getEmail();
+                String emailfieldTrim = emailField.trim();
+                if (email.getEmail() != null && !email.getEmail().trim().isBlank()){
+                    email.setPessoaId(pessoa);
+                    emailService.createEmail(email);
+                }
             }
         }
         return ResponseEntity.status(201).body(pessoa);
@@ -68,6 +77,35 @@ public class PessoaController {
         Pessoa pessoa = dto.getPessoa();
         pessoa.setId(id);
         pessoaService.updatePessoa(pessoa);
+
+        if (dto.getPhones() != null) {
+            for (PhoneCreateOrUpdateDTO phoneDto : dto.getPhones()) {
+                Phone phone = phoneDto.getPhone();
+                phone.setPessoaId(pessoa);
+                phoneService.createPhone(phone);
+            }
+        }
+        if (dto.getEmails() != null) {
+            for (EmailCreateOrUpdateDTO emailDto : dto.getEmails()) {
+                Email email = emailDto.getEmail();
+                email.setPessoaId(pessoa);
+                //Check if email already exists
+                Email existingEmail = emailService.getEmailByEmail(email.getEmail());
+                if (existingEmail != null) {
+                    existingEmail.setPessoaId(pessoa);
+                    emailService.updateEmail(existingEmail);
+                } else {
+                    emailService.createEmail(email);
+                }
+            }
+        }
+        if (dto.getGrupos() != null) {
+            for (GrupoCreateOrUpdateDTO grupoDto : dto.getGrupos()) {
+                Grupo grupo = grupoDto.getGrupo();
+                grupo.getIntegrantes().add(pessoa);
+                grupoService.updateGrupo(grupo);
+            }
+        }
 
         return ResponseEntity.status(200).body(pessoa);
     }

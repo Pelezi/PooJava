@@ -24,7 +24,7 @@ public class Discipulador {
     private Pessoa pessoaId;
 
     @OneToMany(mappedBy = "discipuladorId", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JsonManagedReference
+    @JsonManagedReference(value = "discipulador-celulas")
     private List<Celula> celulas;
 
     @Enumerated(EnumType.STRING)

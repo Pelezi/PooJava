@@ -21,12 +21,12 @@ import java.time.LocalDate;
      @Column(nullable = false)
      private EmailType emailType;
 
-     @Column(length = 200)
+     @Column(length = 200, unique = true)
      private String email;
 
      @ManyToOne
      @JoinColumn(name = "pessoa_id")
-     @JsonBackReference
+     @JsonBackReference(value = "pessoa-emails")
      private Pessoa pessoaId;
 
      @Column(name = "created_at", nullable = false, updatable = false)

@@ -20,12 +20,12 @@ public class Phone {
     @Column(nullable = false)
     private PhoneType PhoneType;
 
-    @Column(length = 20)
+    @Column(length = 20, unique = true)
     private String numero;
 
     @ManyToOne
     @JoinColumn(name = "pessoa_id")
-    @JsonBackReference
+    @JsonBackReference(value = "pessoa-phones")
     private Pessoa pessoaId;
 
     @Column(name = "created_at", nullable = false, updatable = false)
