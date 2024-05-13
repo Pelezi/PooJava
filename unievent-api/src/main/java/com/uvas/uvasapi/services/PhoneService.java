@@ -1,6 +1,7 @@
 package com.uvas.uvasapi.services;
 
 import com.uvas.uvasapi.domain.Phone;
+import com.uvas.uvasapi.exceptions.BusinessException;
 import com.uvas.uvasapi.exceptions.NotFoundException;
 import com.uvas.uvasapi.repositories.PhoneRepository;
 import jakarta.transaction.Transactional;
@@ -22,6 +23,10 @@ public class PhoneService {
 
     @Transactional(rollbackOn = Exception.class)
     public Phone createPhone(Phone phone) {
+        Optional<Phone> phoneExists = phoneRepository.findByNumero(phone.getNumero());
+        if (phoneExists.isPresent()){
+            throw new BusinessException("Este número já existe no sistema");
+        }
 
         phoneRepository.save(phone);
         return phone;
@@ -35,6 +40,10 @@ public class PhoneService {
 
     @Transactional(rollbackOn = Exception.class)
     public Phone updatePhone(Phone phone) {
+        Optional<Phone> phoneExists = phoneRepository.findByNumero(phone.getNumero());
+        if (phoneExists.isPresent() && !phoneExists.get().getId().equals(phone.getId())){
+            throw new BusinessException("Este número já existe no sistema");
+        }
 
         phoneRepository.save(phone);
         return phone;

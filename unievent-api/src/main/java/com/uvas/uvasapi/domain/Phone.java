@@ -20,7 +20,7 @@ public class Phone {
     @Column(nullable = false)
     private PhoneType PhoneType;
 
-    @Column(length = 20, unique = true)
+    @Column(length = 20)
     private String numero;
 
     @ManyToOne

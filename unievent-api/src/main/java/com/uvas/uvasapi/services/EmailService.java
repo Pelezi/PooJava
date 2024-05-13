@@ -1,6 +1,7 @@
 package com.uvas.uvasapi.services;
 
 import com.uvas.uvasapi.domain.Email;
+import com.uvas.uvasapi.exceptions.BusinessException;
 import com.uvas.uvasapi.exceptions.NotFoundException;
 import com.uvas.uvasapi.repositories.EmailRepository;
 import jakarta.transaction.Transactional;
@@ -22,6 +23,10 @@ public class EmailService {
 
     @Transactional(rollbackOn = Exception.class)
     public Email createEmail(Email email) {
+        Optional<Email> emailExists = emailRepository.findByEmail(email.getEmail());
+        if (emailExists.isPresent()){
+            throw new BusinessException("Este email já existe no sistema");
+        }
 
         emailRepository.save(email);
         return email;
@@ -41,6 +46,10 @@ public class EmailService {
 
     @Transactional(rollbackOn = Exception.class)
     public Email updateEmail(Email email) {
+        Optional<Email> emailExists = emailRepository.findByEmail(email.getEmail());
+        if(emailExists.isPresent() && !emailExists.get().getId().equals(email.getId())){
+            throw new BusinessException("Este email já existe no sistema");
+        }
 
         emailRepository.save(email);
         return email;

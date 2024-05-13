@@ -21,7 +21,7 @@ import java.time.LocalDate;
      @Column(nullable = false)
      private EmailType emailType;
 
-     @Column(length = 200, unique = true)
+     @Column(length = 200)
      private String email;
 
      @ManyToOne

@@ -47,15 +47,15 @@ public class PessoaController {
         if (dto.getPhones() != null) {
             for (PhoneCreateOrUpdateDTO phoneDto : dto.getPhones()) {
                 Phone phone = phoneDto.getPhone();
-                phone.setPessoaId(pessoa);
-                phoneService.createPhone(phone);
+                if (phone.getNumero() != null && !phone.getNumero().trim().isBlank()){
+                    phone.setPessoaId(pessoa);
+                    phoneService.createPhone(phone);
+                }
             }
         }
         if (dto.getEmails() != null) {
             for (EmailCreateOrUpdateDTO emailDto : dto.getEmails()) {
                 Email email = emailDto.getEmail();
-                String emailField = email.getEmail();
-                String emailfieldTrim = emailField.trim();
                 if (email.getEmail() != null && !email.getEmail().trim().isBlank()){
                     email.setPessoaId(pessoa);
                     emailService.createEmail(email);
