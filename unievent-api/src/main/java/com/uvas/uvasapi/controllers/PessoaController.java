@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -76,36 +77,47 @@ public class PessoaController {
     public ResponseEntity<Pessoa> updatePessoa(@PathVariable String id, @RequestBody @Valid PessoaCreateOrUpdateDTO dto){
         Pessoa pessoa = dto.getPessoa();
         pessoa.setId(id);
-        pessoaService.updatePessoa(pessoa);
 
+        List<Phone> updatedPhones = new ArrayList<>();
         if (dto.getPhones() != null) {
             for (PhoneCreateOrUpdateDTO phoneDto : dto.getPhones()) {
                 Phone phone = phoneDto.getPhone();
                 phone.setPessoaId(pessoa);
-                phoneService.createPhone(phone);
+
+                //Check if phone already exists and has the same pessoaId
+                Phone existingPhone = phoneService.getPhoneByNumero(phone.getNumero());
+                if (existingPhone != null && existingPhone.getPessoaId().getId().equals(pessoa.getId())) {
+                    System.out.println("Este Telefone já está cadastrado nessa pessoa");
+                } else if (existingPhone != null) {
+                    System.out.println("Este Telefone já está cadastrado em outra pessoa");
+                } else {
+//                    phoneService.createPhone(phone);
+                    updatedPhones.add(phoneService.createPhone(phone));
+                }
             }
         }
+        pessoa.setPhones(updatedPhones);
+
+        List<Email> updatedEmails = new ArrayList<>();
         if (dto.getEmails() != null) {
             for (EmailCreateOrUpdateDTO emailDto : dto.getEmails()) {
                 Email email = emailDto.getEmail();
                 email.setPessoaId(pessoa);
-                //Check if email already exists
+                //Check if email already exists and has the same pessoaId
                 Email existingEmail = emailService.getEmailByEmail(email.getEmail());
-                if (existingEmail != null) {
-                    existingEmail.setPessoaId(pessoa);
-                    emailService.updateEmail(existingEmail);
+                if (existingEmail != null && existingEmail.getPessoaId().getId().equals(pessoa.getId())) {
+                    System.out.println("Este Email já está cadastrado nessa pessoa");
+                } else if (existingEmail != null) {
+                    System.out.println("Este Email já está cadastrado em outra pessoa");
                 } else {
-                    emailService.createEmail(email);
+                    //emailService.createEmail(email);
+                    updatedEmails.add(emailService.createEmail(email));
                 }
             }
         }
-        if (dto.getGrupos() != null) {
-            for (GrupoCreateOrUpdateDTO grupoDto : dto.getGrupos()) {
-                Grupo grupo = grupoDto.getGrupo();
-                grupo.getIntegrantes().add(pessoa);
-                grupoService.updateGrupo(grupo);
-            }
-        }
+        pessoa.setEmails(updatedEmails);
+
+        pessoaService.updatePessoa(pessoa);
 
         return ResponseEntity.status(200).body(pessoa);
     }

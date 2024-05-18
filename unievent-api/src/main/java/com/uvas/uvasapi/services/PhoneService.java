@@ -56,4 +56,9 @@ public class PhoneService {
         phoneRepository.delete(phone);
     }
 
+    public Phone getPhoneByNumero(String numero) {
+        Optional<Phone> phoneExists = phoneRepository.findByNumero(numero);
+
+        return phoneExists.orElse(null);
+    }
 }

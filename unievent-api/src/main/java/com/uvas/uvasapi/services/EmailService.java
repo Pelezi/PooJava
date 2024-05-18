@@ -41,7 +41,7 @@ public class EmailService {
     public Email getEmailByEmail(String email) {
         Optional<Email> emailExists = emailRepository.findByEmail(email);
 
-        return emailExists.orElseThrow(() -> new NotFoundException("Email não encontrado"));
+        return emailExists.orElse(null);
     }
 
     @Transactional(rollbackOn = Exception.class)
