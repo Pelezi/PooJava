@@ -18,16 +18,12 @@ public class DiretorCreateOrUpdateDTO {
 
     @NotNull(message = "Pessoa não informada")
     private String pessoaId;
-    
-    private List<String> gruposList = new ArrayList<>();
 
-    public Diretor getDiretor(PessoaService pessoaService, GrupoService grupoService){
+    public Diretor getDiretor(PessoaService pessoaService){
         Diretor diretor = new Diretor();
 
         Pessoa pessoa = pessoaService.getPessoaById(pessoaId);
         diretor.setPessoaId(pessoa);
-        List<Grupo> grupos = gruposList.stream().map(grupoService::getGrupoById).collect(Collectors.toList());
-        diretor.setGrupos(grupos);
 
         return diretor;
     }

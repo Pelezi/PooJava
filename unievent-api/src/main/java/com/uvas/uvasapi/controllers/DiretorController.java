@@ -33,7 +33,7 @@ public class DiretorController {
 
     @PostMapping
     public ResponseEntity<Diretor> createDiretor(@RequestBody @Valid DiretorCreateOrUpdateDTO dto){
-        Diretor diretor = diretorService.createDiretor(dto.getDiretor(pessoaService, grupoService));
+        Diretor diretor = diretorService.createDiretor(dto.getDiretor(pessoaService));
 
         return ResponseEntity.status(201).body(diretor);
     }
@@ -47,7 +47,7 @@ public class DiretorController {
 
     @PutMapping(path = "{id}")
     public ResponseEntity<Diretor> updateDiretor(@PathVariable String id, @RequestBody @Valid DiretorCreateOrUpdateDTO dto){
-        Diretor diretor = dto.getDiretor(pessoaService, grupoService);
+        Diretor diretor = dto.getDiretor(pessoaService);
         diretor.setId(id);
         diretorService.updateDiretor(diretor);
 

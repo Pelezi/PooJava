@@ -3,6 +3,7 @@ package com.uvas.uvasapi.controllers;
 import com.uvas.uvasapi.controllers.dtos.DiscipuladorCreateOrUpdateDTO;
 import com.uvas.uvasapi.domain.Discipulador;
 import com.uvas.uvasapi.services.DiscipuladorService;
+import com.uvas.uvasapi.services.PessoaService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +18,8 @@ public class DiscipuladorController {
 
     @Autowired
     private DiscipuladorService discipuladorService;
+    @Autowired
+    private PessoaService pessoaService;
 
     @GetMapping
     public ResponseEntity<List<Discipulador>> getDiscipuladores(){
@@ -27,7 +30,7 @@ public class DiscipuladorController {
 
     @PostMapping
     public ResponseEntity<Discipulador> createDiscipulador(@RequestBody @Valid DiscipuladorCreateOrUpdateDTO dto){
-        Discipulador discipulador = discipuladorService.createDiscipulador(dto.getDiscipulador());
+        Discipulador discipulador = discipuladorService.createDiscipulador(dto.getDiscipulador(pessoaService));
 
         return ResponseEntity.status(201).body(discipulador);
     }
@@ -41,7 +44,7 @@ public class DiscipuladorController {
 
     @PutMapping(path = "{id}")
     public ResponseEntity<Discipulador> updateDiscipulador(@PathVariable String id, @RequestBody @Valid DiscipuladorCreateOrUpdateDTO dto){
-        Discipulador discipulador = dto.getDiscipulador();
+        Discipulador discipulador = dto.getDiscipulador(pessoaService);
         discipulador.setId(id);
         discipuladorService.updateDiscipulador(discipulador);
 

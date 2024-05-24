@@ -3,6 +3,7 @@ package com.uvas.uvasapi.controllers.dtos;
 import com.uvas.uvasapi.domain.Discipulador;
 import com.uvas.uvasapi.domain.Pessoa;
 import com.uvas.uvasapi.domain.enums.Rede;
+import com.uvas.uvasapi.services.PessoaService;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -14,17 +15,16 @@ import java.util.List;
 public class DiscipuladorCreateOrUpdateDTO {
     
     @NotNull(message = "Pessoa não informada")
-    private Pessoa pessoaId;
-    
-    private List<CelulaCreateOrUpdateDTO> celulas;
+    private String pessoaId;
 
     private Rede rede;
 
-    public Discipulador getDiscipulador(){
+    public Discipulador getDiscipulador(PessoaService pessoaService){
         Discipulador discipulador = new Discipulador();
 
-        discipulador.setPessoaId(pessoaId);
-        discipulador.setCelulas(celulas.stream().map(CelulaCreateOrUpdateDTO::getCelula).toList());
+        Pessoa pessoa = pessoaService.getPessoaById(pessoaId);
+
+        discipulador.setPessoaId(pessoa);
         discipulador.setRede(rede);
 
         return discipulador;

@@ -1,6 +1,7 @@
 package com.uvas.uvasapi.domain;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Data;
@@ -34,8 +35,8 @@ public class Celula {
     @JsonBackReference(value = "lider-celulas")
     private Lider liderId;
 
-    @OneToMany(mappedBy = "celulaId", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JsonManagedReference(value = "celula-integrantes")
+    @OneToMany(mappedBy = "celulaId", fetch = FetchType.EAGER)
+    @JsonIgnoreProperties({"celulaId", "phones", "emails", "grupos", "createdAt", "updatedAt", "enderecoId"})
     private List<Pessoa> pessoas;
 
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)

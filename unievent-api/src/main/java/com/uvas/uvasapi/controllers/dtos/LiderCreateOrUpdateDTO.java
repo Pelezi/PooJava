@@ -2,6 +2,7 @@ package com.uvas.uvasapi.controllers.dtos;
 
 import com.uvas.uvasapi.domain.Lider;
 import com.uvas.uvasapi.domain.Pessoa;
+import com.uvas.uvasapi.services.PessoaService;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -13,15 +14,13 @@ import java.util.List;
 public class LiderCreateOrUpdateDTO {
 
     @NotNull(message = "Pessoa não informada")
-    private Pessoa pessoaId;
+    private String pessoaId;
 
-    private List<CelulaCreateOrUpdateDTO> celulas;
-
-    public Lider getLider(){
+    public Lider getLider(PessoaService pessoaService){
         Lider lider = new Lider();
 
-        lider.setPessoaId(pessoaId);
-        lider.setCelulas(celulas.stream().map(CelulaCreateOrUpdateDTO::getCelula).toList());
+        Pessoa pessoa = pessoaService.getPessoaById(pessoaId);
+        lider.setPessoaId(pessoa);
 
         return lider;
     }

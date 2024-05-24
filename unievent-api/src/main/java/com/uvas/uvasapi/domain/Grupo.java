@@ -1,9 +1,6 @@
 package com.uvas.uvasapi.domain;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.fasterxml.jackson.annotation.*;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -29,7 +26,7 @@ public class Grupo {
     
     @ManyToOne
     @JoinColumn(name = "diretor_id")
-    @JsonBackReference(value = "diretor-grupo")
+    @JsonIgnoreProperties({"grupos", "createdAt", "updatedAt"})
     private Diretor diretorId;
 
     @ManyToMany()
@@ -38,6 +35,7 @@ public class Grupo {
         joinColumns = @JoinColumn(name = "grupo_id"),
         inverseJoinColumns = @JoinColumn(name = "pessoa_id")
     )
+    @JsonIgnoreProperties({"grupos", "createdAt", "updatedAt", "enderecoId"})
     private List<Pessoa> integrantes;
 
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)

@@ -3,6 +3,7 @@ package com.uvas.uvasapi.controllers;
 import com.uvas.uvasapi.controllers.dtos.LiderCreateOrUpdateDTO;
 import com.uvas.uvasapi.domain.Lider;
 import com.uvas.uvasapi.services.LiderService;
+import com.uvas.uvasapi.services.PessoaService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +18,8 @@ public class LiderController {
 
     @Autowired
     private LiderService liderService;
+    @Autowired
+    private PessoaService pessoaService;
 
     @GetMapping
     public ResponseEntity<List<Lider>> getLideres(){
@@ -27,7 +30,7 @@ public class LiderController {
 
     @PostMapping
     public ResponseEntity<Lider> createLider(@RequestBody @Valid LiderCreateOrUpdateDTO dto){
-        Lider lider = liderService.createLider(dto.getLider());
+        Lider lider = liderService.createLider(dto.getLider(pessoaService));
 
         return ResponseEntity.status(201).body(lider);
     }
@@ -41,7 +44,7 @@ public class LiderController {
 
     @PutMapping(path = "{id}")
     public ResponseEntity<Lider> updateLider(@PathVariable String id, @RequestBody @Valid LiderCreateOrUpdateDTO dto){
-        Lider lider = dto.getLider();
+        Lider lider = dto.getLider(pessoaService);
         lider.setId(id);
         liderService.updateLider(lider);
 

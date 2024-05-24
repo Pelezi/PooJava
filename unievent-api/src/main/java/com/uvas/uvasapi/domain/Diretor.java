@@ -1,5 +1,6 @@
 package com.uvas.uvasapi.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Data;
@@ -21,7 +22,7 @@ public class Diretor {
     private Pessoa pessoaId;
     
     @OneToMany(mappedBy = "diretorId", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JsonManagedReference(value = "diretor-grupo")
+    @JsonIgnoreProperties({"diretorId", "integrantes", "createdAt", "updatedAt"})
     private List<Grupo> grupos;
     
     @Column(name = "created_at", nullable = false, updatable = false)

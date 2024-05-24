@@ -5,12 +5,14 @@ import com.uvas.uvasapi.controllers.dtos.PessoaCreateOrUpdateDTO;
 import com.uvas.uvasapi.domain.Celula;
 import com.uvas.uvasapi.domain.Pessoa;
 import com.uvas.uvasapi.services.CelulaService;
+import com.uvas.uvasapi.services.DiscipuladorService;
 import com.uvas.uvasapi.services.PessoaService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -22,6 +24,8 @@ public class CelulaController {
     private PessoaService pessoaService;
     @Autowired
     private CelulaService celulaService;
+    @Autowired
+    private DiscipuladorService discipuladorService;
 
     @GetMapping
     public ResponseEntity<List<Celula>> getCelulas(){
@@ -32,15 +36,8 @@ public class CelulaController {
 
     @PostMapping
     public ResponseEntity<Celula> createCelula(@RequestBody @Valid CelulaCreateOrUpdateDTO dto){
-        Celula celula = celulaService.createCelula(dto.getCelula());
+        Celula celula = celulaService.createCelula(dto.getCelula(discipuladorService));
 
-        if (dto.getPessoas() != null) {
-            for (PessoaCreateOrUpdateDTO pessoaDto : dto.getPessoas()) {
-                Pessoa pessoa = pessoaDto.getPessoa();
-                pessoa.setCelulaId(celula);
-                pessoaService.createPessoa(pessoa);
-            }
-        }
         return ResponseEntity.status(201).body(celula);
     }
 
@@ -53,8 +50,29 @@ public class CelulaController {
 
     @PutMapping(path = "{id}")
     public ResponseEntity<Celula> updateCelula(@PathVariable String id, @RequestBody @Valid CelulaCreateOrUpdateDTO dto){
-        Celula celula = dto.getCelula();
+        Celula celula = dto.getCelula(discipuladorService);
         celula.setId(id);
+
+        if (dto.getPessoas() != null) {
+            for (Pessoa pessoaDto : dto.getPessoas()) {
+
+                Pessoa existingPessoa = pessoaService.getPessoaById(pessoaDto.getId());
+                if(existingPessoa != null && celula.getPessoas() != null) {
+                    existingPessoa.setCelulaId(celula);
+                    pessoaService.updatePessoa(existingPessoa);
+                    celula.getPessoas().add(existingPessoa);
+                } else if (existingPessoa != null){
+                    existingPessoa.setCelulaId(celula);
+                    List<Pessoa> pessoas = new ArrayList<>();
+                    pessoas.add(existingPessoa);
+                    celula.setPessoas(pessoas);
+                    pessoaService.updatePessoa(existingPessoa);
+                }
+            }
+        }
+        if (dto.getLiderId() != null) {
+
+        }
         celulaService.updateCelula(celula);
 
         return ResponseEntity.status(200).body(celula);
@@ -62,6 +80,16 @@ public class CelulaController {
 
     @DeleteMapping(path = "{id}")
     public ResponseEntity<Celula> deleteCelula(@PathVariable String id){
+
+        //Remove celulaId from pessoas that are in the celula
+        List<Pessoa> pessoas = pessoaService.getPessoas();
+        for (Pessoa pessoa : pessoas) {
+            if (pessoa.getCelulaId() != null && pessoa.getCelulaId().getId().equals(id)) {
+                pessoa.setCelulaId(null);
+                pessoaService.updatePessoa(pessoa);
+            }
+        }
+
         celulaService.deleteCelula(id);
 
         return ResponseEntity.noContent().build();

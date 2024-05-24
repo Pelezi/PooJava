@@ -28,19 +28,17 @@ public class GrupoCreateOrUpdateDTO {
     @NotNull(message = "Diretor do grupo não informado")
     private String diretorId;
 
-    private List<String> integrantesIds = new ArrayList<>();
+    private List<Pessoa> integrantesIds = new ArrayList<>();
 
     private Endereco enderecoId;
 
-    public Grupo getGrupo(DiretorService diretorService, PessoaService pessoaService){
+    public Grupo getGrupo(DiretorService diretorService){
         Grupo grupo = new Grupo();
         
         grupo.setNome(nome);
         grupo.setDataInauguracao(dataInauguracao);
         Diretor diretor = diretorService.getDiretorById(diretorId);
         grupo.setDiretorId(diretor);
-        List<Pessoa> integrantes = integrantesIds.stream().map(pessoaService::getPessoaById).collect(Collectors.toList());
-        grupo.setIntegrantes(integrantes);
         grupo.setEnderecoId(enderecoId);
 
         return grupo;

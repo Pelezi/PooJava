@@ -2,6 +2,7 @@ package com.uvas.uvasapi.controllers;
 
 import com.uvas.uvasapi.controllers.dtos.GrupoCreateOrUpdateDTO;
 import com.uvas.uvasapi.domain.Grupo;
+import com.uvas.uvasapi.domain.Pessoa;
 import com.uvas.uvasapi.services.DiretorService;
 import com.uvas.uvasapi.services.GrupoService;
 import com.uvas.uvasapi.services.PessoaService;
@@ -10,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -33,7 +35,7 @@ public class GrupoController {
 
     @PostMapping
     public ResponseEntity<Grupo> createGrupo(@RequestBody @Valid GrupoCreateOrUpdateDTO dto){
-        Grupo grupo = grupoService.createGrupo(dto.getGrupo(diretorService, pessoaService));
+        Grupo grupo = grupoService.createGrupo(dto.getGrupo(diretorService));
 
         return ResponseEntity.status(201).body(grupo);
     }
@@ -49,6 +51,25 @@ public class GrupoController {
     public ResponseEntity<Grupo> updateGrupo(@PathVariable String id, @RequestBody @Valid GrupoCreateOrUpdateDTO dto){
         Grupo grupo = dto.getGrupo();
         grupo.setId(id);
+
+        if (dto.getIntegrantesIds() != null) {
+            for (Pessoa pessoaDto : dto.getIntegrantesIds()) {
+
+                Pessoa existingPessoa = pessoaService.getPessoaById(pessoaDto.getId());
+                if (existingPessoa != null && grupo.getIntegrantes() != null) {
+                    existingPessoa.getGrupos().add(grupo);
+                    pessoaService.updatePessoa(existingPessoa);
+                    grupo.getIntegrantes().add(existingPessoa);
+                } else if (existingPessoa != null) {
+                    existingPessoa.getGrupos().add(grupo);
+                    List<Pessoa> integrantes = new ArrayList<>();
+                    integrantes.add(existingPessoa);
+                    grupo.setIntegrantes(integrantes);
+                    pessoaService.updatePessoa(existingPessoa);
+                }
+            }
+        }
+
         grupoService.updateGrupo(grupo);
 
         return ResponseEntity.status(200).body(grupo);

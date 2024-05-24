@@ -1,9 +1,6 @@
 package com.uvas.uvasapi.domain;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.fasterxml.jackson.annotation.*;
 import com.uvas.uvasapi.domain.enums.Cargo;
 import jakarta.persistence.*;
 import lombok.Data;
@@ -50,7 +47,8 @@ public class Pessoa {
 
     @ManyToOne
     @JoinColumn(name = "celula_id")
-    @JsonBackReference(value = "celula-integrantes")
+//    @JsonBackReference(value = "celula-integrantes")
+    @JsonIgnoreProperties("pessoas")
     private Celula celulaId;
 
     @ManyToMany(mappedBy = "integrantes")
