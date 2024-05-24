@@ -50,6 +50,8 @@ public class PhoneController {
 
     @DeleteMapping(path = "{id}")
     public ResponseEntity<Phone> deletePhone(@PathVariable String id){
+        Phone phone = phoneService.getPhoneById(id);
+        phone.setPessoaId(null);
         phoneService.deletePhone(id);
 
         return ResponseEntity.noContent().build();

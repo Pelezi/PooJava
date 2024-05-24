@@ -50,6 +50,8 @@ public class EmailController {
 
     @DeleteMapping(path = "{id}")
     public ResponseEntity<Email> deleteEmail(@PathVariable String id){
+        Email email = emailService.getEmailById(id);
+        email.setPessoaId(null);
         emailService.deleteEmail(id);
 
         return ResponseEntity.noContent().build();
