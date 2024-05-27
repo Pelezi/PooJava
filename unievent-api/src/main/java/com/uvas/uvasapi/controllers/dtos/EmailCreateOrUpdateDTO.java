@@ -3,6 +3,7 @@ package com.uvas.uvasapi.controllers.dtos;
 import com.uvas.uvasapi.domain.Email;
 import com.uvas.uvasapi.domain.Pessoa;
 import com.uvas.uvasapi.domain.enums.EmailType;
+import com.uvas.uvasapi.services.PessoaService;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
@@ -21,14 +22,16 @@ public class EmailCreateOrUpdateDTO {
     private EmailType emailType;
 
     @NotNull(message = "Pessoa não informada")
-    private Pessoa pessoaId;
+    private String pessoaId;
 
-    public Email getEmail(){
+    public Email getEmail(PessoaService pessoaService){
         Email email = new Email();
+
+        Pessoa pessoa = pessoaService.getPessoaById(pessoaId);
 
         email.setEmail(this.email);
         email.setEmailType(emailType);
-        email.setPessoaId(pessoaId);
+        email.setPessoaId(pessoa);
 
         return email;
     }

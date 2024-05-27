@@ -3,6 +3,7 @@ package com.uvas.uvasapi.controllers;
 import com.uvas.uvasapi.controllers.dtos.EmailCreateOrUpdateDTO;
 import com.uvas.uvasapi.domain.Email;
 import com.uvas.uvasapi.services.EmailService;
+import com.uvas.uvasapi.services.PessoaService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +18,8 @@ public class EmailController {
 
     @Autowired
     private EmailService emailService;
+    @Autowired
+    private PessoaService pessoaService;
 
     @GetMapping
     public ResponseEntity<List<Email>> getEmails(){
@@ -27,7 +30,7 @@ public class EmailController {
 
     @PostMapping
     public ResponseEntity<Email> createEmail(@RequestBody @Valid EmailCreateOrUpdateDTO dto){
-        Email email = emailService.createEmail(dto.getEmail());
+        Email email = emailService.createEmail(dto.getEmail(pessoaService));
 
         return ResponseEntity.status(201).body(email);
     }
@@ -41,7 +44,7 @@ public class EmailController {
 
     @PutMapping(path = "{id}")
     public ResponseEntity<Email> updateEmail(@PathVariable String id, @RequestBody @Valid EmailCreateOrUpdateDTO dto){
-        Email email = dto.getEmail();
+        Email email = dto.getEmail(pessoaService);
         email.setId(id);
         emailService.updateEmail(email);
 

@@ -2,6 +2,7 @@ package com.uvas.uvasapi.controllers.dtos;
 
 import com.uvas.uvasapi.domain.*;
 import com.uvas.uvasapi.services.DiscipuladorService;
+import com.uvas.uvasapi.services.LiderService;
 import com.uvas.uvasapi.services.PessoaService;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -23,23 +24,26 @@ public class CelulaCreateOrUpdateDTO {
 
     private LocalDate dataInauguracao;
 
+    @NotNull(message = "Discipulador não informado")
     private String discipuladorId;
 
-    private Lider liderId;
+    @NotNull(message = "Lider não informado")
+    private String liderId;
 
     private List<Pessoa> pessoas = new ArrayList<>();
 
     private Endereco enderecoId;
 
-    public Celula getCelula(DiscipuladorService discipuladorService){
+    public Celula getCelula(LiderService liderService, DiscipuladorService discipuladorService){
         Celula celula = new Celula();
 
+        Lider lider = liderService.getLiderById(liderId);
         Discipulador discipulador = discipuladorService.getDiscipuladorById(discipuladorId);
 
         celula.setNome(nome);
         celula.setDataInauguracao(dataInauguracao);
         celula.setDiscipuladorId(discipulador);
-        celula.setLiderId(liderId);
+        celula.setLiderId(lider);
         celula.setEnderecoId(enderecoId);
 
         return celula;

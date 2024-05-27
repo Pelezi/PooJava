@@ -1,7 +1,9 @@
 package com.uvas.uvasapi.controllers;
 
 import com.uvas.uvasapi.controllers.dtos.DiscipuladorCreateOrUpdateDTO;
+import com.uvas.uvasapi.domain.Celula;
 import com.uvas.uvasapi.domain.Discipulador;
+import com.uvas.uvasapi.services.CelulaService;
 import com.uvas.uvasapi.services.DiscipuladorService;
 import com.uvas.uvasapi.services.PessoaService;
 import jakarta.validation.Valid;
@@ -9,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -20,6 +23,8 @@ public class DiscipuladorController {
     private DiscipuladorService discipuladorService;
     @Autowired
     private PessoaService pessoaService;
+    @Autowired
+    private CelulaService celulaService;
 
     @GetMapping
     public ResponseEntity<List<Discipulador>> getDiscipuladores(){
@@ -32,7 +37,29 @@ public class DiscipuladorController {
     public ResponseEntity<Discipulador> createDiscipulador(@RequestBody @Valid DiscipuladorCreateOrUpdateDTO dto){
         Discipulador discipulador = discipuladorService.createDiscipulador(dto.getDiscipulador(pessoaService));
 
+        handleCelula(dto, discipulador);
+
         return ResponseEntity.status(201).body(discipulador);
+    }
+
+    private void handleCelula(@RequestBody @Valid DiscipuladorCreateOrUpdateDTO dto, Discipulador discipulador) {
+        if (dto.getCelulas() != null) {
+            for (Celula celulaDto : dto.getCelulas()) {
+                Celula existingCelula = celulaService.getCelulaById(celulaDto.getId());
+                if (existingCelula != null && discipulador.getCelulas() != null) {
+                    existingCelula.setDiscipuladorId(discipulador);
+                    celulaService.updateCelula(existingCelula);
+                    discipulador.getCelulas().add(existingCelula);
+                } else if (existingCelula != null) {
+                    existingCelula.setDiscipuladorId(discipulador);
+                    List<Celula> celulas = new ArrayList<>();
+                    celulas.add(existingCelula);
+                    discipulador.setCelulas(celulas);
+                    celulaService.updateCelula(existingCelula);
+
+                }
+            }
+        }
     }
 
     @GetMapping(path = "{id}")
@@ -46,6 +73,9 @@ public class DiscipuladorController {
     public ResponseEntity<Discipulador> updateDiscipulador(@PathVariable String id, @RequestBody @Valid DiscipuladorCreateOrUpdateDTO dto){
         Discipulador discipulador = dto.getDiscipulador(pessoaService);
         discipulador.setId(id);
+
+        handleCelula(dto, discipulador);
+
         discipuladorService.updateDiscipulador(discipulador);
 
         return ResponseEntity.status(200).body(discipulador);

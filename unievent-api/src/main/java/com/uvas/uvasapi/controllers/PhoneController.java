@@ -2,6 +2,7 @@ package com.uvas.uvasapi.controllers;
 
 import com.uvas.uvasapi.controllers.dtos.PhoneCreateOrUpdateDTO;
 import com.uvas.uvasapi.domain.Phone;
+import com.uvas.uvasapi.services.PessoaService;
 import com.uvas.uvasapi.services.PhoneService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +18,8 @@ public class PhoneController {
 
     @Autowired
     private PhoneService phoneService;
+    @Autowired
+    private PessoaService pessoaService;
 
     @GetMapping
     public ResponseEntity<List<Phone>> getPhones(){
@@ -27,7 +30,7 @@ public class PhoneController {
 
     @PostMapping
     public ResponseEntity<Phone> createPhone(@RequestBody @Valid PhoneCreateOrUpdateDTO dto){
-        Phone phone = phoneService.createPhone(dto.getPhone());
+        Phone phone = phoneService.createPhone(dto.getPhone(pessoaService));
 
         return ResponseEntity.status(201).body(phone);
     }
@@ -41,7 +44,7 @@ public class PhoneController {
 
     @PutMapping(path = "{id}")
     public ResponseEntity<Phone> updatePhone(@PathVariable String id, @RequestBody @Valid PhoneCreateOrUpdateDTO dto){
-        Phone phone = dto.getPhone();
+        Phone phone = dto.getPhone(pessoaService);
         phone.setId(id);
         phoneService.updatePhone(phone);
 

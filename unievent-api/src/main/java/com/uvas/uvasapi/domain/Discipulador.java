@@ -1,5 +1,6 @@
 package com.uvas.uvasapi.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.uvas.uvasapi.domain.enums.Rede;
 import jakarta.persistence.Entity;
@@ -24,7 +25,7 @@ public class Discipulador {
     private Pessoa pessoaId;
 
     @OneToMany(mappedBy = "discipuladorId", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JsonManagedReference(value = "discipulador-celulas")
+    @JsonIgnoreProperties({"discipuladorId", "pessoas", "createdAt", "updatedAt"})
     private List<Celula> celulas;
 
     @Enumerated(EnumType.STRING)

@@ -1,5 +1,6 @@
 package com.uvas.uvasapi.controllers.dtos;
 
+import com.uvas.uvasapi.domain.Celula;
 import com.uvas.uvasapi.domain.Discipulador;
 import com.uvas.uvasapi.domain.Pessoa;
 import com.uvas.uvasapi.domain.enums.Rede;
@@ -18,6 +19,8 @@ public class DiscipuladorCreateOrUpdateDTO {
     private String pessoaId;
 
     private Rede rede;
+
+    private List<Celula> celulas;
 
     public Discipulador getDiscipulador(PessoaService pessoaService){
         Discipulador discipulador = new Discipulador();

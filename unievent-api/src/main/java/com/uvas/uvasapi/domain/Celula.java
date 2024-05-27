@@ -1,8 +1,6 @@
 package com.uvas.uvasapi.domain;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -27,12 +25,12 @@ public class Celula {
     
     @ManyToOne
     @JoinColumn(name = "discipulador_id")
-    @JsonBackReference(value = "discipulador-celulas")
+    @JsonIgnoreProperties({"celulas", "createdAt", "updatedAt"})
     private Discipulador discipuladorId;
     
     @ManyToOne
     @JoinColumn(name = "lider_id")
-    @JsonBackReference(value = "lider-celulas")
+    @JsonIgnoreProperties({"celulas", "createdAt", "updatedAt"})
     private Lider liderId;
 
     @OneToMany(mappedBy = "celulaId", fetch = FetchType.EAGER)

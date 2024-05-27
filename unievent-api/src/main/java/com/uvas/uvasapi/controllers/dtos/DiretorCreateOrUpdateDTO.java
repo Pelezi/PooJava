@@ -19,6 +19,8 @@ public class DiretorCreateOrUpdateDTO {
     @NotNull(message = "Pessoa não informada")
     private String pessoaId;
 
+    private List<Grupo> grupos;
+
     public Diretor getDiretor(PessoaService pessoaService){
         Diretor diretor = new Diretor();
 

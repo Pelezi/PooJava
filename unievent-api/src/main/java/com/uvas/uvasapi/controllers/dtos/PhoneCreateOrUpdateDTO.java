@@ -3,6 +3,7 @@ package com.uvas.uvasapi.controllers.dtos;
 import com.uvas.uvasapi.domain.Pessoa;
 import com.uvas.uvasapi.domain.Phone;
 import com.uvas.uvasapi.domain.enums.PhoneType;
+import com.uvas.uvasapi.services.PessoaService;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
@@ -21,14 +22,16 @@ public class PhoneCreateOrUpdateDTO {
     private PhoneType phoneType;
 
     @NotNull(message = "Pessoa não informada")
-    private Pessoa pessoaId;
+    private String pessoaId;
 
-    public Phone getPhone(){
+    public Phone getPhone(PessoaService pessoaService){
         Phone phone = new Phone();
+
+        Pessoa pessoa = pessoaService.getPessoaById(pessoaId);
 
         phone.setNumero(numero);
         phone.setPhoneType(phoneType);
-        phone.setPessoaId(pessoaId);
+        phone.setPessoaId(pessoa);
 
         return phone;
     }

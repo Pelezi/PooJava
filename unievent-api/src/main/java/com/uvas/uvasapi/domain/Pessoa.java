@@ -47,7 +47,6 @@ public class Pessoa {
 
     @ManyToOne
     @JoinColumn(name = "celula_id")
-//    @JsonBackReference(value = "celula-integrantes")
     @JsonIgnoreProperties("pessoas")
     private Celula celulaId;
 

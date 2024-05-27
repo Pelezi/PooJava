@@ -6,6 +6,7 @@ import com.uvas.uvasapi.domain.Celula;
 import com.uvas.uvasapi.domain.Pessoa;
 import com.uvas.uvasapi.services.CelulaService;
 import com.uvas.uvasapi.services.DiscipuladorService;
+import com.uvas.uvasapi.services.LiderService;
 import com.uvas.uvasapi.services.PessoaService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +27,8 @@ public class CelulaController {
     private CelulaService celulaService;
     @Autowired
     private DiscipuladorService discipuladorService;
+    @Autowired
+    private LiderService liderService;
 
     @GetMapping
     public ResponseEntity<List<Celula>> getCelulas(){
@@ -36,7 +39,7 @@ public class CelulaController {
 
     @PostMapping
     public ResponseEntity<Celula> createCelula(@RequestBody @Valid CelulaCreateOrUpdateDTO dto){
-        Celula celula = celulaService.createCelula(dto.getCelula(discipuladorService));
+        Celula celula = celulaService.createCelula(dto.getCelula(liderService, discipuladorService));
 
         return ResponseEntity.status(201).body(celula);
     }
@@ -50,7 +53,7 @@ public class CelulaController {
 
     @PutMapping(path = "{id}")
     public ResponseEntity<Celula> updateCelula(@PathVariable String id, @RequestBody @Valid CelulaCreateOrUpdateDTO dto){
-        Celula celula = dto.getCelula(discipuladorService);
+        Celula celula = dto.getCelula(liderService, discipuladorService);
         celula.setId(id);
 
         if (dto.getPessoas() != null) {
