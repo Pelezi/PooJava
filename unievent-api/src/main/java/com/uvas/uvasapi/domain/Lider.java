@@ -16,7 +16,7 @@ public class Lider {
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
     
-    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "pessoa_id")
     @JsonIgnoreProperties({"grupos", "celulaId", "createdAt", "updatedAt"})
     private Pessoa pessoaId;

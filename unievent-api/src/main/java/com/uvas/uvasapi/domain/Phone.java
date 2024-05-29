@@ -1,6 +1,7 @@
  package com.uvas.uvasapi.domain;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.uvas.uvasapi.domain.enums.PhoneType;
 import jakarta.persistence.*;
 import lombok.Data;
@@ -25,7 +26,7 @@ public class Phone {
 
     @ManyToOne
     @JoinColumn(name = "pessoa_id")
-    @JsonBackReference(value = "pessoa-phones")
+    @JsonIgnoreProperties({"phones", "emails", "grupos", "createdAt", "updatedAt", "enderecoId"})
     private Pessoa pessoaId;
 
     @Column(name = "created_at", nullable = false, updatable = false)

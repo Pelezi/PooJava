@@ -1,10 +1,11 @@
 package com.uvas.uvasapi.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.uvas.uvasapi.domain.enums.DiaDaSemana;
 import jakarta.persistence.*;
 import lombok.Data;
 
-import java.time.LocalDate;
+import java.time.*;
 import java.util.List;
 
 @Entity
@@ -18,6 +19,14 @@ public class Celula {
 
     @Column(length = 200, nullable = false)
     private String nome;
+
+    @Enumerated(EnumType.STRING)
+    @Column()
+    private DiaDaSemana diaDaSemana;
+
+    @Temporal(TemporalType.TIME)
+    @Column()
+    private LocalTime horario;
 
     @Temporal(TemporalType.DATE)
     @Column(name = "data_inauguracao")
@@ -42,18 +51,18 @@ public class Celula {
     private Endereco enderecoId;
 
     @Column(name = "created_at", nullable = false, updatable = false)
-    private LocalDate createdAt;
+    private LocalDateTime createdAt;
 
     @Column(name = "updated_at", nullable = false)
-    private LocalDate updatedAt;
+    private LocalDateTime updatedAt;
 
     @PrePersist
     public void prePersist() {
-        createdAt = updatedAt = LocalDate.now();
+        createdAt = updatedAt = LocalDateTime.now();
     }
 
     @PreUpdate
     public void preUpdate() {
-        updatedAt = LocalDate.now();
+        updatedAt = LocalDateTime.now();
     }
 }

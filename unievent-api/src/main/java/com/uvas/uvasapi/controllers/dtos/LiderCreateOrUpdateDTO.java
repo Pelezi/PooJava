@@ -15,14 +15,14 @@ import java.util.List;
 public class LiderCreateOrUpdateDTO {
 
     @NotNull(message = "Pessoa não informada")
-    private String pessoaId;
+    private Pessoa pessoaId;
 
     private List<Celula> celulas;
 
     public Lider getLider(PessoaService pessoaService){
         Lider lider = new Lider();
 
-        Pessoa pessoa = pessoaService.getPessoaById(pessoaId);
+        Pessoa pessoa = pessoaService.getPessoaById(pessoaId.getId());
         lider.setPessoaId(pessoa);
 
         return lider;

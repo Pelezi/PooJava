@@ -38,11 +38,11 @@ public class Pessoa {
     private Endereco enderecoId;
 
     @OneToMany(mappedBy = "pessoaId", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JsonManagedReference(value = "pessoa-phones")
+    @JsonIgnoreProperties("pessoaId")
     private List<Phone> phones;
 
     @OneToMany(mappedBy = "pessoaId", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JsonManagedReference(value = "pessoa-emails")
+    @JsonIgnoreProperties("pessoaId")
     private List<Email> emails;
 
     @ManyToOne
