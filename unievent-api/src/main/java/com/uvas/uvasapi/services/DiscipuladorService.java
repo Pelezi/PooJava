@@ -33,6 +33,12 @@ public class DiscipuladorService {
         return discipuladorExists.orElseThrow(() -> new NotFoundException("Discipulador não encontrado"));
     }
 
+    public Discipulador getDiscipuladorByPessoaId(String pessoaId) {
+        Optional<Discipulador> discipuladorExists = discipuladorRepository.findByPessoaIdId(pessoaId);
+
+        return discipuladorExists.orElseThrow(() -> new NotFoundException("Discipulador não encontrado"));
+    }
+
     @Transactional(rollbackOn = Exception.class)
     public Discipulador updateDiscipulador(Discipulador discipulador) {
 

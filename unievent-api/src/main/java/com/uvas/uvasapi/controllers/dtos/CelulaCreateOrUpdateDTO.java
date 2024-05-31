@@ -25,10 +25,10 @@ public class CelulaCreateOrUpdateDTO {
     private LocalDate dataInauguracao;
 
     @NotNull(message = "Discipulador não informado")
-    private String discipuladorId;
+    private Discipulador discipuladorId;
 
     @NotNull(message = "Lider não informado")
-    private String liderId;
+    private Lider liderId;
 
     private List<Pessoa> pessoas = new ArrayList<>();
 
@@ -37,8 +37,8 @@ public class CelulaCreateOrUpdateDTO {
     public Celula getCelula(LiderService liderService, DiscipuladorService discipuladorService){
         Celula celula = new Celula();
 
-        Lider lider = liderService.getLiderById(liderId);
-        Discipulador discipulador = discipuladorService.getDiscipuladorById(discipuladorId);
+        Lider lider = liderService.getLiderByPessoaId(liderId.getPessoaId().getId());
+        Discipulador discipulador = discipuladorService.getDiscipuladorByPessoaId(discipuladorId.getPessoaId().getId());
 
         celula.setNome(nome);
         celula.setDataInauguracao(dataInauguracao);
