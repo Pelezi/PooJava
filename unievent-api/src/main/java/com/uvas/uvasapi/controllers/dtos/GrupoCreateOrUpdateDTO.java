@@ -20,6 +20,8 @@ import java.util.stream.Collectors;
 @NoArgsConstructor
 public class GrupoCreateOrUpdateDTO {
 
+    private String id;
+
     @NotNull(message = "Nome do grupo não informado")
     private String nome;
 

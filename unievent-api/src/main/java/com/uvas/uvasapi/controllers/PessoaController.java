@@ -21,12 +21,6 @@ public class PessoaController {
 
     @Autowired
     private PessoaService pessoaService;
-    @Autowired
-    private PhoneService phoneService;
-    @Autowired
-    private EmailService emailService;
-    @Autowired
-    private GrupoService grupoService;
 
     @GetMapping
     public ResponseEntity<List<Pessoa>> getPessoas(){
@@ -49,11 +43,45 @@ public class PessoaController {
         return ResponseEntity.ok(pessoa);
     }
 
+    @GetMapping(path = "celula/{celulaId}")
+    public ResponseEntity<List<Pessoa>> getPessoaByCelulaId(@PathVariable String celulaId){
+        List<Pessoa> pessoa = pessoaService.getPessoaByCelulaId(celulaId);
+
+        for (Pessoa p : pessoa) {
+            p.setCelulaId(null);
+            p.setGrupos(null);
+        }
+
+        return ResponseEntity.ok(pessoa);
+    }
+
     @PutMapping(path = "{id}")
     public ResponseEntity<Pessoa> updatePessoa(@PathVariable String id, @RequestBody @Valid PessoaCreateOrUpdateDTO dto){
         Pessoa pessoa = dto.getPessoa();
         pessoa.setId(id);
 
+        pessoaService.updatePessoa(pessoa);
+
+        return ResponseEntity.status(200).body(pessoa);
+    }
+
+    //remove pessoa from celula
+    @PutMapping(path = "{id}/removeCelula")
+    public ResponseEntity<Pessoa> removePessoaFromCelula(@PathVariable String id){
+        Pessoa pessoa = pessoaService.getPessoaById(id);
+        pessoa.setCelulaId(null);
+        pessoaService.updatePessoa(pessoa);
+
+        return ResponseEntity.status(200).body(pessoa);
+    }
+
+    //remove pessoa from grupo
+    @PutMapping(path = "{id}/removeGrupo")
+    public ResponseEntity<Pessoa> removePessoaFromGrupo(@PathVariable String id, @RequestBody @Valid GrupoCreateOrUpdateDTO dto){
+        Pessoa pessoa = pessoaService.getPessoaById(id);
+        Grupo grupo = dto.getGrupo();
+        grupo.setId(dto.getId());
+        pessoa.getGrupos().remove(grupo);
         pessoaService.updatePessoa(pessoa);
 
         return ResponseEntity.status(200).body(pessoa);

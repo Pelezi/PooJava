@@ -3,6 +3,8 @@ package com.uvas.uvasapi.controllers;
 import com.uvas.uvasapi.controllers.dtos.CelulaCreateOrUpdateDTO;
 import com.uvas.uvasapi.controllers.dtos.PessoaCreateOrUpdateDTO;
 import com.uvas.uvasapi.domain.Celula;
+import com.uvas.uvasapi.domain.Discipulador;
+import com.uvas.uvasapi.domain.Lider;
 import com.uvas.uvasapi.domain.Pessoa;
 import com.uvas.uvasapi.services.CelulaService;
 import com.uvas.uvasapi.services.DiscipuladorService;
@@ -41,6 +43,17 @@ public class CelulaController {
     public ResponseEntity<Celula> createCelula(@RequestBody @Valid CelulaCreateOrUpdateDTO dto){
         Celula celula = celulaService.createCelula(dto.getCelula(liderService, discipuladorService));
 
+        if (dto.getPessoas() != null) {
+            for (Pessoa pessoaDto : dto.getPessoas()) {
+                Pessoa existingPessoa = pessoaService.getPessoaById(pessoaDto.getId());
+                if(existingPessoa != null) {
+                    existingPessoa.setCelulaId(celula);
+                    pessoaService.updatePessoa(existingPessoa);
+                    celula.getPessoas().add(existingPessoa);
+                }
+            }
+        }
+
         return ResponseEntity.status(201).body(celula);
     }
 
@@ -52,7 +65,7 @@ public class CelulaController {
     }
 
     @PutMapping(path = "{id}")
-    public ResponseEntity<Celula> updateCelula(@PathVariable String id, @RequestBody @Valid CelulaCreateOrUpdateDTO dto){
+    public ResponseEntity<Celula> updateCelula(@PathVariable String id, @RequestBody CelulaCreateOrUpdateDTO dto){
         Celula celula = dto.getCelula(liderService, discipuladorService);
         celula.setId(id);
 
@@ -74,7 +87,24 @@ public class CelulaController {
             }
         }
         if (dto.getLiderId() != null) {
-
+            Lider lider = liderService.getLiderByPessoaId(dto.getLiderId().getId());
+            List<Celula> celulas = lider.getCelulas();
+            if (celulas != null) {
+                celulas.removeIf(celula1 -> celula1.getId().equals(id));
+                celulas.add(celula);
+                lider.setCelulas(celulas);
+                liderService.updateLider(lider);
+            }
+        }
+        if (dto.getDiscipuladorId() != null) {
+            Discipulador discipulador = discipuladorService.getDiscipuladorByPessoaId(dto.getDiscipuladorId().getId());
+            List<Celula> celulas = discipulador.getCelulas();
+            if (celulas != null) {
+                celulas.removeIf(celula1 -> celula1.getId().equals(id));
+                celulas.add(celula);
+                discipulador.setCelulas(celulas);
+                discipuladorService.updateDiscipulador(discipulador);
+            }
         }
         celulaService.updateCelula(celula);
 

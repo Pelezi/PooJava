@@ -77,6 +77,14 @@ public class GrupoController {
 
     @DeleteMapping(path = "{id}")
     public ResponseEntity<Grupo> deleteGrupo(@PathVariable String id){
+        //Remove grupoId from pessoas that are in the grupo
+        List<Pessoa> pessoas = pessoaService.getPessoas();
+        for (Pessoa pessoa : pessoas) {
+            if (pessoa.getGrupos() != null) {
+                pessoa.getGrupos().removeIf(grupo -> grupo.getId().equals(id));
+                pessoaService.updatePessoa(pessoa);
+            }
+        }
         grupoService.deleteGrupo(id);
 
         return ResponseEntity.noContent().build();

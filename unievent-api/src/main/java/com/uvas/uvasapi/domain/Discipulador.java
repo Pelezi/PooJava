@@ -22,6 +22,7 @@ public class Discipulador {
 
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "pessoa_id")
+    @JsonIgnoreProperties({"celulaId", "grupos", "createdAt", "updatedAt"})
     private Pessoa pessoaId;
 
     @OneToMany(mappedBy = "discipuladorId", cascade = CascadeType.ALL, fetch = FetchType.EAGER)

@@ -33,6 +33,10 @@ public class PessoaService {
         return pessoaExists.orElseThrow(() -> new NotFoundException("Pessoa não encontrada"));
     }
 
+    public List<Pessoa> getPessoaByCelulaId(String celulaId) {
+        return pessoaRepository.findByCelulaIdId(celulaId);
+    }
+
     @Transactional(rollbackOn = Exception.class)
     public Pessoa updatePessoa(Pessoa pessoa) {
 

@@ -43,8 +43,6 @@ public class PessoaCreateOrUpdateDTO {
     public Pessoa getPessoa(){
         Pessoa pessoa = new Pessoa();
 
-
-
         pessoa.setNome(nome);
         pessoa.setDataNascimento(dataNascimento);
         pessoa.setDataBatismo(dataBatismo);

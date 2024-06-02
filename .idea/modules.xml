@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/unifavip-poo-main.iml" filepath="$PROJECT_DIR$/.idea/unifavip-poo-main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/unievent-api/uvas-api.iml" filepath="$PROJECT_DIR$/unievent-api/uvas-api.iml" />
     </modules>
   </component>
 </project>
