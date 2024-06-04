@@ -24,6 +24,8 @@ public class PessoaController {
     private PessoaService pessoaService;
     @Autowired
     private GrupoService grupoService;
+    @Autowired
+    private CelulaService celulaService;
 
     @GetMapping
     public ResponseEntity<List<Pessoa>> getPessoas(){
@@ -104,12 +106,34 @@ public class PessoaController {
         return ResponseEntity.status(200).body(pessoa);
     }
 
+    //add pessoa to celula
+    @PutMapping(path = "addCelula/{id}/{celulaId}")
+    public ResponseEntity<Pessoa> addPessoaToCelula(@PathVariable String id, @PathVariable String celulaId){
+        Pessoa pessoa = pessoaService.getPessoaById(id);
+        Celula celula = celulaService.getCelulaById(celulaId);
+        pessoa.setCelulaId(celula);
+        pessoaService.updatePessoa(pessoa);
+
+        return ResponseEntity.status(200).body(pessoa);
+    }
+
     //remove pessoa from grupo
     @PutMapping(path = "removeGrupo/{id}/{grupoId}")
     public ResponseEntity<Pessoa> removePessoaFromGrupo(@PathVariable String id, @PathVariable String grupoId, @RequestBody @Valid GrupoCreateOrUpdateDTO dto){
         Pessoa pessoa = pessoaService.getPessoaById(id);
         Grupo grupo = grupoService.getGrupoById(grupoId);
         pessoa.getGrupos().remove(grupo);
+        pessoaService.updatePessoa(pessoa);
+
+        return ResponseEntity.status(200).body(pessoa);
+    }
+
+    //add pessoa to grupo
+    @PutMapping(path = "addGrupo/{id}/{grupoId}")
+    public ResponseEntity<Pessoa> addPessoaToGrupo(@PathVariable String id, @PathVariable String grupoId, @RequestBody @Valid GrupoCreateOrUpdateDTO dto){
+        Pessoa pessoa = pessoaService.getPessoaById(id);
+        Grupo grupo = grupoService.getGrupoById(grupoId);
+        pessoa.getGrupos().add(grupo);
         pessoaService.updatePessoa(pessoa);
 
         return ResponseEntity.status(200).body(pessoa);
