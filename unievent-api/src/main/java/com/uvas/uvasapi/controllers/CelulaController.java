@@ -6,6 +6,7 @@ import com.uvas.uvasapi.domain.Celula;
 import com.uvas.uvasapi.domain.Discipulador;
 import com.uvas.uvasapi.domain.Lider;
 import com.uvas.uvasapi.domain.Pessoa;
+import com.uvas.uvasapi.domain.enums.DiaDaSemana;
 import com.uvas.uvasapi.services.CelulaService;
 import com.uvas.uvasapi.services.DiscipuladorService;
 import com.uvas.uvasapi.services.LiderService;
@@ -15,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,6 +34,18 @@ public class CelulaController {
     @Autowired
     private LiderService liderService;
 
+    private void handlePessoas(@RequestBody @Valid CelulaCreateOrUpdateDTO dto, Celula celula) {
+        if (dto.getPessoas() != null) {
+            for (Pessoa pessoaDto : dto.getPessoas()) {
+                Pessoa existingPessoa = pessoaService.getPessoaById(pessoaDto.getId());
+                if (existingPessoa != null) {
+                    existingPessoa.setCelulaId(celula);
+                    pessoaService.updatePessoa(existingPessoa);
+                }
+            }
+        }
+    }
+
     @GetMapping
     public ResponseEntity<List<Celula>> getCelulas(){
         List<Celula> celulas = celulaService.getCelulas();
@@ -43,23 +57,50 @@ public class CelulaController {
     public ResponseEntity<Celula> createCelula(@RequestBody @Valid CelulaCreateOrUpdateDTO dto){
         Celula celula = celulaService.createCelula(dto.getCelula(liderService, discipuladorService));
 
-        if (dto.getPessoas() != null) {
-            for (Pessoa pessoaDto : dto.getPessoas()) {
-                Pessoa existingPessoa = pessoaService.getPessoaById(pessoaDto.getId());
-                if(existingPessoa != null) {
-                    existingPessoa.setCelulaId(celula);
-                    pessoaService.updatePessoa(existingPessoa);
-                    celula.getPessoas().add(existingPessoa);
-                }
-            }
-        }
+        handlePessoas(dto, celula);
 
         return ResponseEntity.status(201).body(celula);
     }
 
+
     @GetMapping(path = "{id}")
     public ResponseEntity<Celula> getCelulaById(@PathVariable String id){
         Celula celula = celulaService.getCelulaById(id);
+
+        return ResponseEntity.ok(celula);
+    }
+
+    @GetMapping(path = "lider/{liderId}")
+    public ResponseEntity<List<Celula>> getCelulaByLiderId(@PathVariable String liderId){
+        List<Celula> celula = celulaService.getCelulaByLiderId(liderId);
+
+        return ResponseEntity.ok(celula);
+    }
+
+    @GetMapping(path = "discipulador/{discipuladorId}")
+    public ResponseEntity<List<Celula>> getCelulaByDiscipuladorId(@PathVariable String discipuladorId){
+        List<Celula> celula = celulaService.getCelulaByDiscipuladorId(discipuladorId);
+
+        return ResponseEntity.ok(celula);
+    }
+
+    @GetMapping(path = "diaDaSemana/{diaDaSemana}")
+    public ResponseEntity<List<Celula>> getCelulaByDiaDaSemana(@PathVariable DiaDaSemana diaDaSemana){
+        List<Celula> celula = celulaService.getCelulaByDiaDaSemana(diaDaSemana);
+
+        return ResponseEntity.ok(celula);
+    }
+
+    @GetMapping(path = "horario/{horario}")
+    public ResponseEntity<List<Celula>> getCelulaByHorario(@PathVariable LocalTime horario){
+        List<Celula> celula = celulaService.getCelulaByHorario(horario);
+
+        return ResponseEntity.ok(celula);
+    }
+
+    @GetMapping(path = "enderecoIdBairro/{bairro}")
+    public ResponseEntity<List<Celula>> getCelulaByEnderecoIdBairro(@PathVariable String bairro){
+        List<Celula> celula = celulaService.getCelulaByEnderecoIdBairro(bairro);
 
         return ResponseEntity.ok(celula);
     }
@@ -69,25 +110,17 @@ public class CelulaController {
         Celula celula = dto.getCelula(liderService, discipuladorService);
         celula.setId(id);
 
-        if (dto.getPessoas() != null) {
-            for (Pessoa pessoaDto : dto.getPessoas()) {
-
-                Pessoa existingPessoa = pessoaService.getPessoaById(pessoaDto.getId());
-                if(existingPessoa != null && celula.getPessoas() != null) {
-                    existingPessoa.setCelulaId(celula);
-                    pessoaService.updatePessoa(existingPessoa);
-                    celula.getPessoas().add(existingPessoa);
-                } else if (existingPessoa != null){
-                    existingPessoa.setCelulaId(celula);
-                    List<Pessoa> pessoas = new ArrayList<>();
-                    pessoas.add(existingPessoa);
-                    celula.setPessoas(pessoas);
-                    pessoaService.updatePessoa(existingPessoa);
-                }
+        handlePessoas(dto, celula);
+        //Remove celulaId from pessoas that are not in the celula
+        List<Pessoa> pessoas = pessoaService.getPessoas();
+        for (Pessoa pessoa : pessoas) {
+            if (pessoa.getCelulaId() != null && pessoa.getCelulaId().getId().equals(id) &&celula.getPessoas() != null && !celula.getPessoas().contains(pessoa)) {
+                pessoa.setCelulaId(null);
+                pessoaService.updatePessoa(pessoa);
             }
         }
         if (dto.getLiderId() != null) {
-            Lider lider = liderService.getLiderByPessoaId(dto.getLiderId().getId());
+            Lider lider = liderService.getLiderById(dto.getLiderId().getId());
             List<Celula> celulas = lider.getCelulas();
             if (celulas != null) {
                 celulas.removeIf(celula1 -> celula1.getId().equals(id));
@@ -97,7 +130,7 @@ public class CelulaController {
             }
         }
         if (dto.getDiscipuladorId() != null) {
-            Discipulador discipulador = discipuladorService.getDiscipuladorByPessoaId(dto.getDiscipuladorId().getId());
+            Discipulador discipulador = discipuladorService.getDiscipuladorById(dto.getDiscipuladorId().getId());
             List<Celula> celulas = discipulador.getCelulas();
             if (celulas != null) {
                 celulas.removeIf(celula1 -> celula1.getId().equals(id));

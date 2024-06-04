@@ -5,6 +5,7 @@ import com.uvas.uvasapi.controllers.dtos.GrupoCreateOrUpdateDTO;
 import com.uvas.uvasapi.controllers.dtos.PessoaCreateOrUpdateDTO;
 import com.uvas.uvasapi.controllers.dtos.PhoneCreateOrUpdateDTO;
 import com.uvas.uvasapi.domain.*;
+import com.uvas.uvasapi.domain.enums.Cargo;
 import com.uvas.uvasapi.services.*;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +22,8 @@ public class PessoaController {
 
     @Autowired
     private PessoaService pessoaService;
+    @Autowired
+    private GrupoService grupoService;
 
     @GetMapping
     public ResponseEntity<List<Pessoa>> getPessoas(){
@@ -43,9 +46,35 @@ public class PessoaController {
         return ResponseEntity.ok(pessoa);
     }
 
+    @GetMapping(path = "cargo/{cargo}")
+    public ResponseEntity<List<Pessoa>> getPessoaByCargo(@PathVariable Cargo cargo){
+        List<Pessoa> pessoa = pessoaService.getPessoaByCargo(cargo);
+
+        return ResponseEntity.ok(pessoa);
+    }
+
+    @GetMapping(path = "endereco/bairro/{bairro}")
+    public ResponseEntity<List<Pessoa>> getPessoaByEnderecoIdBairro(@PathVariable String bairro){
+        List<Pessoa> pessoa = pessoaService.getPessoaByEnderecoIdBairro(bairro);
+
+        return ResponseEntity.ok(pessoa);
+    }
+
     @GetMapping(path = "celula/{celulaId}")
     public ResponseEntity<List<Pessoa>> getPessoaByCelulaId(@PathVariable String celulaId){
         List<Pessoa> pessoa = pessoaService.getPessoaByCelulaId(celulaId);
+
+        for (Pessoa p : pessoa) {
+            p.setCelulaId(null);
+            p.setGrupos(null);
+        }
+
+        return ResponseEntity.ok(pessoa);
+    }
+
+    @GetMapping(path = "grupo/{grupoId}")
+    public ResponseEntity<List<Pessoa>> getPessoaByGrupoId(@PathVariable String grupoId){
+        List<Pessoa> pessoa = pessoaService.getPessoaByGrupoId(grupoId);
 
         for (Pessoa p : pessoa) {
             p.setCelulaId(null);
@@ -66,7 +95,7 @@ public class PessoaController {
     }
 
     //remove pessoa from celula
-    @PutMapping(path = "{id}/removeCelula")
+    @PutMapping(path = "removeCelula/{id}")
     public ResponseEntity<Pessoa> removePessoaFromCelula(@PathVariable String id){
         Pessoa pessoa = pessoaService.getPessoaById(id);
         pessoa.setCelulaId(null);
@@ -76,11 +105,10 @@ public class PessoaController {
     }
 
     //remove pessoa from grupo
-    @PutMapping(path = "{id}/removeGrupo")
-    public ResponseEntity<Pessoa> removePessoaFromGrupo(@PathVariable String id, @RequestBody @Valid GrupoCreateOrUpdateDTO dto){
+    @PutMapping(path = "removeGrupo/{id}/{grupoId}")
+    public ResponseEntity<Pessoa> removePessoaFromGrupo(@PathVariable String id, @PathVariable String grupoId, @RequestBody @Valid GrupoCreateOrUpdateDTO dto){
         Pessoa pessoa = pessoaService.getPessoaById(id);
-        Grupo grupo = dto.getGrupo();
-        grupo.setId(dto.getId());
+        Grupo grupo = grupoService.getGrupoById(grupoId);
         pessoa.getGrupos().remove(grupo);
         pessoaService.updatePessoa(pessoa);
 

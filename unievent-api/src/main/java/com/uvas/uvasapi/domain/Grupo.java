@@ -1,6 +1,7 @@
 package com.uvas.uvasapi.domain;
 
 import com.fasterxml.jackson.annotation.*;
+import com.uvas.uvasapi.domain.enums.GrupoType;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -18,6 +19,10 @@ public class Grupo {
 
     @Column(length = 200, nullable = false)
     private String nome;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private GrupoType grupoType;
 
     @Temporal(TemporalType.DATE)
     @Column(name = "data_inauguracao")

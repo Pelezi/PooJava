@@ -50,6 +50,7 @@ public class Pessoa {
     private Celula celulaId;
 
     @ManyToMany(mappedBy = "integrantes")
+    @JsonIgnoreProperties("integrantes")
     private List<Grupo> grupos;
 
     @Column(name = "created_at", nullable = false, updatable = false)

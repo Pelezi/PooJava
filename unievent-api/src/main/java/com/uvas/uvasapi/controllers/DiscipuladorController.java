@@ -26,22 +26,6 @@ public class DiscipuladorController {
     @Autowired
     private CelulaService celulaService;
 
-    @GetMapping
-    public ResponseEntity<List<Discipulador>> getDiscipuladores(){
-        List<Discipulador> discipuladores = discipuladorService.getDiscipuladores();
-
-        return ResponseEntity.ok(discipuladores);
-    }
-
-    @PostMapping
-    public ResponseEntity<Discipulador> createDiscipulador(@RequestBody @Valid DiscipuladorCreateOrUpdateDTO dto){
-        Discipulador discipulador = discipuladorService.createDiscipulador(dto.getDiscipulador(pessoaService));
-
-        handleCelula(dto, discipulador);
-
-        return ResponseEntity.status(201).body(discipulador);
-    }
-
     private void handleCelula(@RequestBody @Valid DiscipuladorCreateOrUpdateDTO dto, Discipulador discipulador) {
         if (dto.getCelulas() != null) {
             for (Celula celulaDto : dto.getCelulas()) {
@@ -62,9 +46,32 @@ public class DiscipuladorController {
         }
     }
 
+    @GetMapping
+    public ResponseEntity<List<Discipulador>> getDiscipuladores(){
+        List<Discipulador> discipuladores = discipuladorService.getDiscipuladores();
+
+        return ResponseEntity.ok(discipuladores);
+    }
+
+    @PostMapping
+    public ResponseEntity<Discipulador> createDiscipulador(@RequestBody @Valid DiscipuladorCreateOrUpdateDTO dto){
+        Discipulador discipulador = discipuladorService.createDiscipulador(dto.getDiscipulador(pessoaService));
+
+        handleCelula(dto, discipulador);
+
+        return ResponseEntity.status(201).body(discipulador);
+    }
+
     @GetMapping(path = "{id}")
     public ResponseEntity<Discipulador> getDiscipuladorById(@PathVariable String id){
         Discipulador discipulador = discipuladorService.getDiscipuladorById(id);
+
+        return ResponseEntity.ok(discipulador);
+    }
+
+    @GetMapping(path = "pessoa/{pessoaId}")
+    public ResponseEntity<Discipulador> getDiscipuladorByPessoaId(@PathVariable String pessoaId){
+        Discipulador discipulador = discipuladorService.getDiscipuladorByPessoaId(pessoaId);
 
         return ResponseEntity.ok(discipulador);
     }
@@ -75,6 +82,14 @@ public class DiscipuladorController {
         discipulador.setId(id);
 
         handleCelula(dto, discipulador);
+        //Remove discipuladorId from celulas that are not in the new list
+        List<Celula> celulas = celulaService.getCelulas();
+        for (Celula celula : celulas) {
+            if (celula.getDiscipuladorId() != null && celula.getDiscipuladorId().getId().equals(id) && !discipulador.getCelulas().contains(celula)) {
+                celula.setDiscipuladorId(null);
+                celulaService.updateCelula(celula);
+            }
+        }
 
         discipuladorService.updateDiscipulador(discipulador);
 
@@ -83,6 +98,14 @@ public class DiscipuladorController {
 
     @DeleteMapping(path = "{id}")
     public ResponseEntity<Discipulador> deleteDiscipulador(@PathVariable String id){
+        //Remove discipuladorId from celulas that have this discipulador
+        List<Celula> celulas = celulaService.getCelulas();
+        for (Celula celula : celulas) {
+            if (celula.getDiscipuladorId() != null && celula.getDiscipuladorId().getId().equals(id)) {
+                celula.setDiscipuladorId(null);
+                celulaService.updateCelula(celula);
+            }
+        }
         discipuladorService.deleteDiscipulador(id);
 
         return ResponseEntity.noContent().build();

@@ -1,6 +1,7 @@
 package com.uvas.uvasapi.services;
 
 import com.uvas.uvasapi.domain.Pessoa;
+import com.uvas.uvasapi.domain.enums.Cargo;
 import com.uvas.uvasapi.exceptions.NotFoundException;
 import com.uvas.uvasapi.repositories.PessoaRepository;
 import jakarta.transaction.Transactional;
@@ -35,6 +36,18 @@ public class PessoaService {
 
     public List<Pessoa> getPessoaByCelulaId(String celulaId) {
         return pessoaRepository.findByCelulaIdId(celulaId);
+    }
+
+    public List<Pessoa> getPessoaByGrupoId(String grupoId) {
+        return pessoaRepository.findByGruposId(grupoId);
+    }
+
+    public List<Pessoa> getPessoaByCargo(Cargo cargo) {
+        return pessoaRepository.findByCargo(cargo);
+    }
+
+    public List<Pessoa> getPessoaByEnderecoIdBairro(String bairro) {
+        return pessoaRepository.findByEnderecoIdBairro(bairro);
     }
 
     @Transactional(rollbackOn = Exception.class)

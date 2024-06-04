@@ -8,6 +8,6 @@ import java.util.Optional;
 
 @Repository
 public interface DiscipuladorRepository extends JpaRepository<Discipulador, String> {
+    //find a discipulador by pessoaId
     public Optional<Discipulador> findByPessoaIdId(String pessoaId);
-
 }

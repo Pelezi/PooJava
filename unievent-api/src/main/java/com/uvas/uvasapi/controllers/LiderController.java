@@ -69,12 +69,27 @@ public class LiderController {
         return ResponseEntity.ok(lider);
     }
 
+    @GetMapping(path = "pessoa/{pessoaId}")
+    public ResponseEntity<Lider> getLiderByPessoaId(@PathVariable String pessoaId){
+        Lider lider = liderService.getLiderByPessoaId(pessoaId);
+
+        return ResponseEntity.ok(lider);
+    }
+
     @PutMapping(path = "{id}")
     public ResponseEntity<Lider> updateLider(@PathVariable String id, @RequestBody @Valid LiderCreateOrUpdateDTO dto){
         Lider lider = dto.getLider(pessoaService);
         lider.setId(id);
 
         handleCelula(dto, lider);
+        //Remove liderId from celulas that are not in the new list
+        List<Celula> celulas = celulaService.getCelulas();
+        for (Celula celula : celulas) {
+            if (celula.getLiderId() != null && celula.getLiderId().getId().equals(id) && lider.getCelulas() != null && !lider.getCelulas().contains(celula)) {
+                celula.setLiderId(null);
+                celulaService.updateCelula(celula);
+            }
+        }
 
         liderService.updateLider(lider);
 
@@ -83,6 +98,14 @@ public class LiderController {
 
     @DeleteMapping(path = "{id}")
     public ResponseEntity<Lider> deleteLider(@PathVariable String id){
+        //Remove liderId from celulas that have this lider
+        List<Celula> celulas = celulaService.getCelulas();
+        for (Celula celula : celulas) {
+            if (celula.getLiderId() != null && celula.getLiderId().getId().equals(id)) {
+                celula.setLiderId(null);
+                celulaService.updateCelula(celula);
+            }
+        }
         liderService.deleteLider(id);
 
         return ResponseEntity.noContent().build();

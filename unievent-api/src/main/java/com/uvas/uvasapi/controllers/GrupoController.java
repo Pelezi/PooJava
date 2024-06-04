@@ -3,6 +3,7 @@ package com.uvas.uvasapi.controllers;
 import com.uvas.uvasapi.controllers.dtos.GrupoCreateOrUpdateDTO;
 import com.uvas.uvasapi.domain.Grupo;
 import com.uvas.uvasapi.domain.Pessoa;
+import com.uvas.uvasapi.domain.enums.GrupoType;
 import com.uvas.uvasapi.services.DiretorService;
 import com.uvas.uvasapi.services.GrupoService;
 import com.uvas.uvasapi.services.PessoaService;
@@ -26,6 +27,20 @@ public class GrupoController {
     @Autowired
     private PessoaService pessoaService;
 
+    private void handleIntegrantes(@RequestBody @Valid GrupoCreateOrUpdateDTO dto, Grupo grupo) {
+        for (Pessoa pessoaDto : dto.getIntegrantesIds()) {
+
+            Pessoa existingPessoa = pessoaService.getPessoaById(pessoaDto.getId());
+            if (existingPessoa != null) {
+                if (grupo.getIntegrantes() == null) {
+                    grupo.setIntegrantes(new ArrayList<>());
+                }
+                grupo.getIntegrantes().add(existingPessoa);
+            }
+        }
+        grupoService.updateGrupo(grupo);
+    }
+
     @GetMapping
     public ResponseEntity<List<Grupo>> getGrupos(){
         List<Grupo> grupos = grupoService.getGrupos();
@@ -37,6 +52,10 @@ public class GrupoController {
     public ResponseEntity<Grupo> createGrupo(@RequestBody @Valid GrupoCreateOrUpdateDTO dto){
         Grupo grupo = grupoService.createGrupo(dto.getGrupo(diretorService));
 
+        if (dto.getIntegrantesIds() != null){
+            handleIntegrantes(dto, grupo);
+        }
+
         return ResponseEntity.status(201).body(grupo);
     }
 
@@ -47,25 +66,40 @@ public class GrupoController {
         return ResponseEntity.ok(grupo);
     }
 
+    @GetMapping(path = "diretor/{diretorId}")
+    public ResponseEntity<List<Grupo>> getGrupoByDiretorId(@PathVariable String diretorId){
+        List<Grupo> grupos = grupoService.getGrupoByDiretorId(diretorId);
+
+        return ResponseEntity.ok(grupos);
+    }
+
+    @GetMapping(path = "grupoType/{grupoType}")
+    public ResponseEntity<List<Grupo>> getGrupoByGrupoType(@PathVariable GrupoType grupoType){
+        List<Grupo> grupos = grupoService.getGrupoByGrupoType(grupoType);
+
+        return ResponseEntity.ok(grupos);
+    }
+
+    @GetMapping(path = "integrante/{pessoaId}")
+    public ResponseEntity<List<Grupo>> getGrupoByIntegrantesId(@PathVariable String pessoaId){
+        List<Grupo> grupos = grupoService.getGrupoByIntegrantesId(pessoaId);
+
+        return ResponseEntity.ok(grupos);
+    }
+
     @PutMapping(path = "{id}")
     public ResponseEntity<Grupo> updateGrupo(@PathVariable String id, @RequestBody @Valid GrupoCreateOrUpdateDTO dto){
-        Grupo grupo = dto.getGrupo();
+        Grupo grupo = dto.getGrupo(diretorService);
         grupo.setId(id);
 
         if (dto.getIntegrantesIds() != null) {
-            for (Pessoa pessoaDto : dto.getIntegrantesIds()) {
-
-                Pessoa existingPessoa = pessoaService.getPessoaById(pessoaDto.getId());
-                if (existingPessoa != null && grupo.getIntegrantes() != null) {
-                    existingPessoa.getGrupos().add(grupo);
-                    pessoaService.updatePessoa(existingPessoa);
-                    grupo.getIntegrantes().add(existingPessoa);
-                } else if (existingPessoa != null) {
-                    existingPessoa.getGrupos().add(grupo);
-                    List<Pessoa> integrantes = new ArrayList<>();
-                    integrantes.add(existingPessoa);
-                    grupo.setIntegrantes(integrantes);
-                    pessoaService.updatePessoa(existingPessoa);
+            handleIntegrantes(dto, grupo);
+            //Remove grupoId from pessoas that are not in the grupo
+            List<Pessoa> pessoas = pessoaService.getPessoas();
+            for (Pessoa pessoa : pessoas) {
+                if (pessoa.getGrupos() != null) {
+                    pessoa.getGrupos().removeIf(pessoaGrupo -> pessoaGrupo.getId().equals(id) && !grupo.getIntegrantes().contains(pessoaGrupo));
+                    pessoaService.updatePessoa(pessoa);
                 }
             }
         }
@@ -74,6 +108,7 @@ public class GrupoController {
 
         return ResponseEntity.status(200).body(grupo);
     }
+
 
     @DeleteMapping(path = "{id}")
     public ResponseEntity<Grupo> deleteGrupo(@PathVariable String id){

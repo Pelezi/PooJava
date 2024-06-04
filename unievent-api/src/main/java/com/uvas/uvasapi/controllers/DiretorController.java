@@ -75,6 +75,14 @@ public class DiretorController {
         diretor.setId(id);
 
         handleGrupo(dto, diretor);
+        //Remove diretorId from grupos that are not in the updated list
+        List<Grupo> grupos = grupoService.getGrupos();
+        for (Grupo grupo : grupos) {
+            if (grupo.getDiretorId() != null && grupo.getDiretorId().getId().equals(id) && !diretor.getGrupos().contains(grupo)) {
+                grupo.setDiretorId(null);
+                grupoService.updateGrupo(grupo);
+            }
+        }
 
         diretorService.updateDiretor(diretor);
 
@@ -83,6 +91,14 @@ public class DiretorController {
 
     @DeleteMapping(path = "{id}")
     public ResponseEntity<Diretor> deleteDiretor(@PathVariable String id){
+        //Remove diretorId from grupos that have this diretor
+        List<Grupo> grupos = grupoService.getGrupos();
+        for (Grupo grupo : grupos) {
+            if (grupo.getDiretorId() != null && grupo.getDiretorId().getId().equals(id)) {
+                grupo.setDiretorId(null);
+                grupoService.updateGrupo(grupo);
+            }
+        }
         diretorService.deleteDiretor(id);
 
         return ResponseEntity.noContent().build();

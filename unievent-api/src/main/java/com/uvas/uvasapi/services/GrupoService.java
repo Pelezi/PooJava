@@ -1,6 +1,7 @@
 package com.uvas.uvasapi.services;
 
 import com.uvas.uvasapi.domain.Grupo;
+import com.uvas.uvasapi.domain.enums.GrupoType;
 import com.uvas.uvasapi.exceptions.NotFoundException;
 import com.uvas.uvasapi.repositories.GrupoRepository;
 import jakarta.transaction.Transactional;
@@ -31,6 +32,18 @@ public class GrupoService {
         Optional<Grupo> grupoExists = grupoRepository.findById(id);
 
         return grupoExists.orElseThrow(() -> new NotFoundException("Grupo não encontrado"));
+    }
+
+    public List<Grupo> getGrupoByDiretorId(String diretorId) {
+        return grupoRepository.findByDiretorIdId(diretorId);
+    }
+
+    public List<Grupo> getGrupoByGrupoType(GrupoType grupoType) {
+        return grupoRepository.findByGrupoType(grupoType);
+    }
+
+    public List<Grupo> getGrupoByIntegrantesId(String pessoaId) {
+        return grupoRepository.findByintegrantesId(pessoaId);
     }
 
     @Transactional(rollbackOn = Exception.class)
