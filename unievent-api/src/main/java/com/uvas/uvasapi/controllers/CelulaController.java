@@ -161,4 +161,24 @@ public class CelulaController {
         return ResponseEntity.noContent().build();
     }
 
+    //remove lider from celula
+    @PutMapping(path = "removeLider/{id}")
+    public ResponseEntity<Celula> removeLiderFromCelula(@PathVariable String id){
+        Celula celula = celulaService.getCelulaById(id);
+        celula.setLiderId(null);
+        celulaService.updateCelula(celula);
+
+        return ResponseEntity.status(200).body(celula);
+    }
+
+    //remove discipulador from celula
+    @PutMapping(path = "removeDiscipulador/{id}")
+    public ResponseEntity<Celula> removeDiscipuladorFromCelula(@PathVariable String id){
+        Celula celula = celulaService.getCelulaById(id);
+        celula.setDiscipuladorId(null);
+        celulaService.updateCelula(celula);
+
+        return ResponseEntity.status(200).body(celula);
+    }
+
 }

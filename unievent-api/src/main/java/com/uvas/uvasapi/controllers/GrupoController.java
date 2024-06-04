@@ -125,4 +125,14 @@ public class GrupoController {
         return ResponseEntity.noContent().build();
     }
 
+    //remove diretor from grupo
+    @PutMapping(path = "removeDiretor/{id}")
+    public ResponseEntity<Grupo> removeDiretorFromGrupo(@PathVariable String id){
+        Grupo grupo = grupoService.getGrupoById(id);
+        grupo.setDiretorId(null);
+        grupoService.updateGrupo(grupo);
+
+        return ResponseEntity.status(200).body(grupo);
+    }
+
 }
