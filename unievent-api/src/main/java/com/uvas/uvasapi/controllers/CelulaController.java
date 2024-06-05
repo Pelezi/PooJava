@@ -171,11 +171,33 @@ public class CelulaController {
         return ResponseEntity.status(200).body(celula);
     }
 
+    //add lider to celula
+    @PutMapping(path = "addLider/{id}/{liderId}")
+    public ResponseEntity<Celula> addLiderToCelula(@PathVariable String id, @PathVariable String liderId){
+        Celula celula = celulaService.getCelulaById(id);
+        Lider lider = liderService.getLiderById(liderId);
+        celula.setLiderId(lider);
+        celulaService.updateCelula(celula);
+
+        return ResponseEntity.status(200).body(celula);
+    }
+
     //remove discipulador from celula
     @PutMapping(path = "removeDiscipulador/{id}")
     public ResponseEntity<Celula> removeDiscipuladorFromCelula(@PathVariable String id){
         Celula celula = celulaService.getCelulaById(id);
         celula.setDiscipuladorId(null);
+        celulaService.updateCelula(celula);
+
+        return ResponseEntity.status(200).body(celula);
+    }
+
+    //add discipulador to celula
+    @PutMapping(path = "addDiscipulador/{id}/{discipuladorId}")
+    public ResponseEntity<Celula> addDiscipuladorToCelula(@PathVariable String id, @PathVariable String discipuladorId){
+        Celula celula = celulaService.getCelulaById(id);
+        Discipulador discipulador = discipuladorService.getDiscipuladorById(discipuladorId);
+        celula.setDiscipuladorId(discipulador);
         celulaService.updateCelula(celula);
 
         return ResponseEntity.status(200).body(celula);
