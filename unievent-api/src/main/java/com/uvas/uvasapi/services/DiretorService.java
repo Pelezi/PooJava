@@ -33,6 +33,11 @@ public class DiretorService {
         return diretorExists.orElseThrow(() -> new NotFoundException("Diretor não encontrado"));
     }
 
+    //get diretor by pessoaId
+    public Diretor getDiretorByPessoaId(String pessoaId) {
+        return diretorRepository.findByPessoaIdId(pessoaId);
+    }
+
     @Transactional(rollbackOn = Exception.class)
     public Diretor updateDiretor(Diretor diretor) {
 

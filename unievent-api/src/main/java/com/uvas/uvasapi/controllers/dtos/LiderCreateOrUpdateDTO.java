@@ -23,6 +23,7 @@ public class LiderCreateOrUpdateDTO {
         Lider lider = new Lider();
 
         Pessoa pessoa = pessoaService.getPessoaById(pessoaId.getId());
+
         lider.setPessoaId(pessoa);
 
         return lider;

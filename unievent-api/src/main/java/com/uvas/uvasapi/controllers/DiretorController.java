@@ -69,6 +69,14 @@ public class DiretorController {
         return ResponseEntity.ok(diretor);
     }
 
+    //get diretor by pessoaId
+    @GetMapping(path = "pessoa/{pessoaId}")
+    public ResponseEntity<Diretor> getDiretorByPessoaId(@PathVariable String pessoaId){
+        Diretor diretor = diretorService.getDiretorByPessoaId(pessoaId);
+
+        return ResponseEntity.ok(diretor);
+    }
+
     @PutMapping(path = "{id}")
     public ResponseEntity<Diretor> updateDiretor(@PathVariable String id, @RequestBody @Valid DiretorCreateOrUpdateDTO dto){
         Diretor diretor = dto.getDiretor(pessoaService);
