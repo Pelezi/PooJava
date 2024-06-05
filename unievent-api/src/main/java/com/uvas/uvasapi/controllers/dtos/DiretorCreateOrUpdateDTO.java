@@ -17,14 +17,14 @@ import java.util.stream.Collectors;
 public class DiretorCreateOrUpdateDTO {
 
     @NotNull(message = "Pessoa não informada")
-    private String pessoaId;
+    private Pessoa pessoaId;
 
     private List<Grupo> grupos;
 
     public Diretor getDiretor(PessoaService pessoaService){
         Diretor diretor = new Diretor();
 
-        Pessoa pessoa = pessoaService.getPessoaById(pessoaId);
+        Pessoa pessoa = pessoaService.getPessoaById(pessoaId.getId());
         diretor.setPessoaId(pessoa);
 
         return diretor;
