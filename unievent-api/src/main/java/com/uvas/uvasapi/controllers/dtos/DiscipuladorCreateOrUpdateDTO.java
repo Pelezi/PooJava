@@ -16,7 +16,7 @@ import java.util.List;
 public class DiscipuladorCreateOrUpdateDTO {
     
     @NotNull(message = "Pessoa não informada")
-    private String pessoaId;
+    private Pessoa pessoaId;
 
     private Rede rede;
 
@@ -25,7 +25,7 @@ public class DiscipuladorCreateOrUpdateDTO {
     public Discipulador getDiscipulador(PessoaService pessoaService){
         Discipulador discipulador = new Discipulador();
 
-        Pessoa pessoa = pessoaService.getPessoaById(pessoaId);
+        Pessoa pessoa = pessoaService.getPessoaById(pessoaId.getId());
 
         discipulador.setPessoaId(pessoa);
         discipulador.setRede(rede);
