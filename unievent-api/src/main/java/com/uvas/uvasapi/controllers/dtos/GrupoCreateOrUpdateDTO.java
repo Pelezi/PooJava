@@ -33,7 +33,7 @@ public class GrupoCreateOrUpdateDTO {
     @NotNull(message = "Diretor do grupo não informado")
     private Diretor diretorId;
 
-    private List<Pessoa> integrantesIds = new ArrayList<>();
+    private List<Pessoa> integrantes = new ArrayList<>();
 
     private Endereco enderecoId;
 

@@ -28,17 +28,18 @@ public class GrupoController {
     private PessoaService pessoaService;
 
     private void handleIntegrantes(@RequestBody @Valid GrupoCreateOrUpdateDTO dto, Grupo grupo) {
-        for (Pessoa pessoaDto : dto.getIntegrantesIds()) {
-
-            Pessoa existingPessoa = pessoaService.getPessoaById(pessoaDto.getId());
-            if (existingPessoa != null) {
-                if (grupo.getIntegrantes() == null) {
-                    grupo.setIntegrantes(new ArrayList<>());
+        if (dto.getIntegrantes() != null) {
+            for (Pessoa pessoaDto : dto.getIntegrantes()) {
+                Pessoa existingPessoa = pessoaService.getPessoaById(pessoaDto.getId());
+                if (existingPessoa != null) {
+                    if (grupo.getIntegrantes() == null) {
+                        grupo.setIntegrantes(new ArrayList<>());
+                    }
+                    grupo.getIntegrantes().add(existingPessoa);
                 }
-                grupo.getIntegrantes().add(existingPessoa);
             }
+            grupoService.updateGrupo(grupo);
         }
-        grupoService.updateGrupo(grupo);
     }
 
     @GetMapping
@@ -52,7 +53,7 @@ public class GrupoController {
     public ResponseEntity<Grupo> createGrupo(@RequestBody @Valid GrupoCreateOrUpdateDTO dto){
         Grupo grupo = grupoService.createGrupo(dto.getGrupo(diretorService));
 
-        if (dto.getIntegrantesIds() != null){
+        if (dto.getIntegrantes() != null){
             handleIntegrantes(dto, grupo);
         }
 
@@ -92,7 +93,7 @@ public class GrupoController {
         Grupo grupo = dto.getGrupo(diretorService);
         grupo.setId(id);
 
-        if (dto.getIntegrantesIds() != null) {
+        if (dto.getIntegrantes() != null) {
             handleIntegrantes(dto, grupo);
             //Remove grupoId from pessoas that are not in the grupo
             List<Pessoa> pessoas = pessoaService.getPessoas();
