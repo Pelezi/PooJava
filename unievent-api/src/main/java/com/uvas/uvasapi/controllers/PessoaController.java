@@ -118,8 +118,8 @@ public class PessoaController {
     public ResponseEntity<Pessoa> removePessoaFromGrupo(@PathVariable String id, @PathVariable String grupoId){
         Pessoa pessoa = pessoaService.getPessoaById(id);
         Grupo grupo = grupoService.getGrupoById(grupoId);
-        pessoa.getGrupos().remove(grupo);
-        pessoaService.updatePessoa(pessoa);
+        grupo.getIntegrantes().removeIf(p -> p.getId().equals(id));
+        grupoService.updateGrupo(grupo);
 
         return ResponseEntity.status(200).body(pessoa);
     }
@@ -129,8 +129,8 @@ public class PessoaController {
     public ResponseEntity<Pessoa> addPessoaToGrupo(@PathVariable String id, @PathVariable String grupoId){
         Pessoa pessoa = pessoaService.getPessoaById(id);
         Grupo grupo = grupoService.getGrupoById(grupoId);
-        pessoa.getGrupos().add(grupo);
-        pessoaService.updatePessoa(pessoa);
+        grupo.getIntegrantes().add(pessoa);
+        grupoService.updateGrupo(grupo);
 
         return ResponseEntity.status(200).body(pessoa);
     }
