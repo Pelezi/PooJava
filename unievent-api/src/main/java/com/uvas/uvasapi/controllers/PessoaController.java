@@ -1,9 +1,6 @@
 package com.uvas.uvasapi.controllers;
 
-import com.uvas.uvasapi.controllers.dtos.EmailCreateOrUpdateDTO;
-import com.uvas.uvasapi.controllers.dtos.GrupoCreateOrUpdateDTO;
 import com.uvas.uvasapi.controllers.dtos.PessoaCreateOrUpdateDTO;
-import com.uvas.uvasapi.controllers.dtos.PhoneCreateOrUpdateDTO;
 import com.uvas.uvasapi.domain.*;
 import com.uvas.uvasapi.domain.enums.Cargo;
 import com.uvas.uvasapi.services.*;
@@ -12,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -119,7 +115,7 @@ public class PessoaController {
 
     //remove pessoa from grupo
     @PutMapping(path = "removeGrupo/{id}/{grupoId}")
-    public ResponseEntity<Pessoa> removePessoaFromGrupo(@PathVariable String id, @PathVariable String grupoId, @RequestBody @Valid GrupoCreateOrUpdateDTO dto){
+    public ResponseEntity<Pessoa> removePessoaFromGrupo(@PathVariable String id, @PathVariable String grupoId){
         Pessoa pessoa = pessoaService.getPessoaById(id);
         Grupo grupo = grupoService.getGrupoById(grupoId);
         pessoa.getGrupos().remove(grupo);
@@ -130,7 +126,7 @@ public class PessoaController {
 
     //add pessoa to grupo
     @PutMapping(path = "addGrupo/{id}/{grupoId}")
-    public ResponseEntity<Pessoa> addPessoaToGrupo(@PathVariable String id, @PathVariable String grupoId, @RequestBody @Valid GrupoCreateOrUpdateDTO dto){
+    public ResponseEntity<Pessoa> addPessoaToGrupo(@PathVariable String id, @PathVariable String grupoId){
         Pessoa pessoa = pessoaService.getPessoaById(id);
         Grupo grupo = grupoService.getGrupoById(grupoId);
         pessoa.getGrupos().add(grupo);
