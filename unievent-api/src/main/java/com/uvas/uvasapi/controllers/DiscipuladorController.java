@@ -106,6 +106,10 @@ public class DiscipuladorController {
                 celulaService.updateCelula(celula);
             }
         }
+        //set pessoaId to null
+        Discipulador discipulador = discipuladorService.getDiscipuladorById(id);
+        discipulador.setPessoaId(null);
+        discipuladorService.updateDiscipulador(discipulador);
         discipuladorService.deleteDiscipulador(id);
 
         return ResponseEntity.noContent().build();

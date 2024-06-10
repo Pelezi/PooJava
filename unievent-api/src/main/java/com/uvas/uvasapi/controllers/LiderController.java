@@ -106,6 +106,10 @@ public class LiderController {
                 celulaService.updateCelula(celula);
             }
         }
+        //set pessoaId to null
+        Lider lider = liderService.getLiderById(id);
+        lider.setPessoaId(null);
+        liderService.updateLider(lider);
         liderService.deleteLider(id);
 
         return ResponseEntity.noContent().build();

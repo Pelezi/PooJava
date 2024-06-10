@@ -107,6 +107,10 @@ public class DiretorController {
                 grupoService.updateGrupo(grupo);
             }
         }
+        //set pessoaId to null
+        Diretor diretor = diretorService.getDiretorById(id);
+        diretor.setPessoaId(null);
+        diretorService.updateDiretor(diretor);
         diretorService.deleteDiretor(id);
 
         return ResponseEntity.noContent().build();
