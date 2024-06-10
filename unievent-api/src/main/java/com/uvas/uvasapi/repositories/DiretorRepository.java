@@ -8,4 +8,6 @@ import org.springframework.stereotype.Repository;
 public interface DiretorRepository extends JpaRepository<Diretor, String> {
     //get diretor by pessoaId
     Diretor findByPessoaIdId(String pessoaId);
+    //find by grupo
+    Diretor findByGruposId(String grupoId);
 }

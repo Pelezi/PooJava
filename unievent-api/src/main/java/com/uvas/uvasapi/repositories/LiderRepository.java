@@ -9,5 +9,6 @@ import java.util.Optional;
 @Repository
 public interface LiderRepository extends JpaRepository<Lider, String> {
     public Optional<Lider> findByPessoaIdId(String pessoaId);
+    public Optional<Lider> findByCelulasId(String celulaId);
 
 }

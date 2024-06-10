@@ -76,6 +76,13 @@ public class LiderController {
         return ResponseEntity.ok(lider);
     }
 
+    @GetMapping(path = "celula/{celulaId}")
+    public ResponseEntity<Lider> getLiderByCelulaId(@PathVariable String celulaId){
+        Lider lider = liderService.getLiderByCelulaId(celulaId);
+
+        return ResponseEntity.ok(lider);
+    }
+
     @PutMapping(path = "{id}")
     public ResponseEntity<Lider> updateLider(@PathVariable String id, @RequestBody @Valid LiderCreateOrUpdateDTO dto){
         Lider lider = dto.getLider(pessoaService);
