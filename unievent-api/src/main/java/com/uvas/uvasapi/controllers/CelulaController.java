@@ -155,6 +155,27 @@ public class CelulaController {
                 pessoaService.updatePessoa(pessoa);
             }
         }
+        //remove lider from celula
+        Celula celula = celulaService.getCelulaById(id);
+        if (celula.getLiderId() != null) {
+            Lider lider = liderService.getLiderById(celula.getLiderId().getId());
+            List<Celula> celulas = lider.getCelulas();
+            if (celulas != null) {
+                celulas.removeIf(celula1 -> celula1.getId().equals(id));
+                lider.setCelulas(celulas);
+                liderService.updateLider(lider);
+            }
+        }
+        //remove discipulador from celula
+        if (celula.getDiscipuladorId() != null) {
+            Discipulador discipulador = discipuladorService.getDiscipuladorById(celula.getDiscipuladorId().getId());
+            List<Celula> celulas = discipulador.getCelulas();
+            if (celulas != null) {
+                celulas.removeIf(celula1 -> celula1.getId().equals(id));
+                discipulador.setCelulas(celulas);
+                discipuladorService.updateDiscipulador(discipulador);
+            }
+        }
 
         celulaService.deleteCelula(id);
 

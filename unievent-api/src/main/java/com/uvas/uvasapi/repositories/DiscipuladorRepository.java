@@ -10,4 +10,6 @@ import java.util.Optional;
 public interface DiscipuladorRepository extends JpaRepository<Discipulador, String> {
     //find a discipulador by pessoaId
     public Optional<Discipulador> findByPessoaIdId(String pessoaId);
+    //find by celulaId
+    public Optional<Discipulador> findByCelulasId(String celulaId);
 }

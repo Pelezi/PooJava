@@ -39,6 +39,12 @@ public class LiderService {
         return liderExists.orElseThrow(() -> new NotFoundException("Lider não encontrado"));
     }
 
+    public Lider getLiderByCelulaId(String celulaId) {
+        Optional<Lider> liderExists = liderRepository.findByCelulasId(celulaId);
+
+        return liderExists.orElseThrow(() -> new NotFoundException("Lider não encontrado"));
+    }
+
     @Transactional(rollbackOn = Exception.class)
     public Lider updateLider(Lider lider) {
 
